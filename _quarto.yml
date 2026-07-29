@@ -1,0 +1,41 @@
+project:
+  type: website
+  output-dir: _site
+  # Charts and the companion board pages are pre-rendered by the private
+  # pipeline and must reach the deploy verbatim. board.html is plain HTML, so
+  # Quarto copies it rather than rendering it; the PNG variants exist only so
+  # dev.to can hotlink a raster it will not mangle.
+  resources:
+    - "posts/*/board.html"
+    - "posts/*/charts/*"
+
+website:
+  title: "llmbench"
+  site-url: https://lcances.github.io/llmbench-site/
+  description: >-
+    Performance benchmarks of small and medium open-source LLMs on consumer
+    hardware — measured, reproducible, and tuned to the limit.
+  navbar:
+    left:
+      - href: index.qmd
+        text: Posts
+      - href: about.qmd
+        text: About
+  page-footer:
+    center: "Every number on this site was computed from measured results by the llmbench pipeline."
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    respect-user-color-scheme: true
+    toc: true
+    toc-depth: 2
+    css: styles.css
+
+# Posts are markdown plus pre-rendered images. Nothing here should ever execute
+# code at render time: no Jupyter or Knitr on the runner, and no way for a
+# rendered page to disagree with the results it was generated from.
+execute:
+  enabled: false

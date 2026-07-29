@@ -1,0 +1,22 @@
+---
+title: "llmbench"
+subtitle: "What can consumer hardware actually run, and at what speed?"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  fields: [date, title, description]
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+---
+
+Every post here comes from the same fixed test bench, and every number in one
+was measured rather than quoted: prompt-processing and decode speed as curves
+rather than single figures, time-to-first-token from the client's side, the
+largest context that both loads *and* completes a request, peak VRAM, and power
+draw integrated into energy per token.
+
+The tooling sweeps each runtime's tuning parameters to their limits, so the
+comparison is never "defaults versus defaults" — it is what the hardware can
+really do once someone has tried.

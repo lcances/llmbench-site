@@ -1,0 +1,82 @@
+name: publish
+
+# Merging a PR into main IS the publish action: render, deploy, then syndicate.
+# Nothing reaches the public without a human merge.
+on:
+  push:
+    branches: [main]
+  # Manual trigger: lets dev.to be synced after the API key is added, without
+  # having to merge something new.
+  workflow_dispatch: {}
+
+concurrency:
+  group: publish
+  cancel-in-progress: false   # never interrupt a deploy mid-flight
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          # Pinned: an unpinned Quarto would re-render every post differently
+          # the day it releases a minor version.
+          version: 1.10.18
+      - run: quarto render
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  devto:
+    # THE GATE. A failed render or a failed Pages deploy stops here, so a live
+    # dev.to article can never point at a canonical URL that does not resolve.
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write          # commits the article-ID mapping back
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Sync posts to dev.to
+        env:
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+          DEVTO_DRY_RUN: ${{ vars.DEVTO_DRY_RUN }}
+          SITE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: python3 .github/scripts/devto_sync.py
+      - name: Commit the article-ID mapping
+        run: |
+          if git diff --quiet -- .devto/articles.json; then
+            echo "mapping unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .devto/articles.json
+          git commit -m "devto: record article IDs [skip ci]"
+          # Pushes made with GITHUB_TOKEN do not trigger workflows, so this
+          # cannot loop. Retry in case another merge landed while we published.
+          for attempt in 1 2 3; do
+            if git push; then exit 0; fi
+            git pull --rebase origin main || exit 1
+          done
+          exit 1
