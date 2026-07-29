@@ -133,7 +133,7 @@ Max context does not appear above because tuning does not move it here: every co
 Against llama.cpp's own stock settings rather than ollama's, the numeric knobs are worth +3.2 % decode — the categorical ones are where the tuning value is.
 <!-- llmbench:generated:end scoreboard -->
 
-<!-- llmbench:generated:begin translations hash=4f9b376f6f5e -->
+<!-- llmbench:generated:begin translations hash=41f58f7eb298 -->
 ## What this means in human units
 
 | Configuration | A 100-page PDF | Reads back at | Cost per 1M tokens |
@@ -145,9 +145,7 @@ Against llama.cpp's own stock settings rather than ollama's, the numeric knobs a
 <!-- llmbench:site-only:begin -->
 
 Price it at your own tariff — the table above is computed at 0.25 €/kWh.
-<!-- llmbench:site-only:end -->
 
-<!-- llmbench:site-only:begin -->
 <div class="llmbench-price">
   <label for="llmbench-kwh">Electricity price</label>
   <input type="range" id="llmbench-kwh" min="0.10" max="0.50" step="0.01"
