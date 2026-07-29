@@ -16,3 +16,13 @@ How content gets here:
 
 Nothing published yet — the first series (the Qwen3.5 family on a budget
 1× 16 GB GPU box: what can it run, and at what speed?) is in preparation.
+
+## About the authoring
+
+The benchmark harness and the chart/article generators behind these posts were
+built with [Claude Code](https://claude.com/claude-code) as a pair-programming
+tool. Every benchmark was run on my own box, every design decision is mine, and
+every article is reviewed and merged by me before it goes live — I am the author
+of what is published here.
+
+— Léo Cances
