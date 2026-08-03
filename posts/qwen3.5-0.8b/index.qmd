@@ -1,0 +1,198 @@
+---
+title: "Qwen3.5-0.8B on a 16 GB budget GPU: nothing to tune, one thing to toggle"
+date: 2026-08-03
+description: "Every tuning knob on the smallest Qwen3.5, measured on one RTX 5060 Ti: what the numeric knobs are worth, what flash-attn is worth, and what running through ollama costs."
+categories: [llm, benchmark, llamacpp, ollama]
+image: charts/flagship-decode-light.png
+engine: markdown
+---
+
+<!-- llmbench:generated:begin meta hash=f29177139456 -->
+| Provenance | |
+|---|---|
+| Model | `qwen3.5-0.8b`, unsloth GGUF Q4_K_M |
+| Hardware profile | `budget` — 1x NVIDIA GeForce RTX 5060 Ti, 20 CPU cores |
+| Runtimes | llama.cpp@b10068/gguf-Q4_K_M, ollama@v0.32.1/gguf-Q4_K_M |
+| Benchmark version | `v1` |
+| Results commit | `2722d64` |
+<!-- llmbench:generated:end meta -->
+
+<!-- llmbench:commentary:begin intro -->
+This is the first rung of the Qwen3.5 ladder on the budget tier: one RTX 5060 Ti, 16 GB, a model small enough that the card is never the constraint. That makes it the cleanest place to ask the question the whole series is built on — how much performance do default settings leave on the table, and which knobs actually move?
+<!-- llmbench:commentary:end intro -->
+
+<!-- llmbench:generated:begin outofbox hash=ae5a925380bd -->
+## Out of the box
+
+Decode, out of the box
+:   273.2 tokens/s at 512 tokens of context
+
+Decode, tuned
+:   362.0 tokens/s
+
+Decode at 32k
+:   216.5 out of the box, 268.4 tuned
+
+Largest usable context
+:   262 144 tokens
+
+Cold start
+:   4.32 s out of the box, 1.02 s tuned
+
+
+![](charts/flagship-decode-light.svg){.light-content fig-alt="Line chart: decode tokens per second against context depth"}
+![](charts/flagship-decode-dark.svg){.dark-content fig-alt="Line chart: decode tokens per second against context depth"}
+
+**Figure 1.** Decode speed against context depth — the same GGUF file in every run. Tuned llama.cpp holds 362.0 tokens/s at 512 tokens of context and 268.4 at 32k; ollama's defaults give 273.2 and 216.5, a +24.4 % gap at depth.
+
+![](charts/prefill-ttft-light.svg){.light-content fig-alt="Two panels: prefill throughput and time-to-first-token vs depth"}
+![](charts/prefill-ttft-dark.svg){.dark-content fig-alt="Two panels: prefill throughput and time-to-first-token vs depth"}
+
+**Figure 2.** Prompt processing and time-to-first-token. Tuned llama.cpp prefills at 13.8k tokens/s at 32k and answers a 512-token prompt in 39.8 ms, against ollama's 296.5 ms floor.
+<!-- llmbench:generated:end outofbox -->
+
+<!-- llmbench:commentary:begin outofbox-notes -->
+*TODO — commentary.*
+<!-- llmbench:commentary:end outofbox-notes -->
+
+<!-- llmbench:generated:begin wrapper hash=72c1ff7bd36a -->
+## In depth — the wrapper tax
+
+![](charts/coldstart-light.svg){.light-content fig-alt="Bar chart: model load time and first-token latency per runtime"}
+![](charts/coldstart-dark.svg){.dark-content fig-alt="Bar chart: model load time and first-token latency per runtime"}
+
+**Figure 3.** Cold start and the fixed price of the wrapper. llama.cpp is serving 1.02 s after launch, ollama 4.32 s — a 3.30 s gap, plus 256.7 ms on every first token.
+<!-- llmbench:generated:end wrapper -->
+
+<!-- llmbench:commentary:begin wrapper-notes -->
+*TODO — commentary.*
+<!-- llmbench:commentary:end wrapper-notes -->
+
+<!-- llmbench:generated:begin context hash=88afeab72fb5 -->
+## In depth — the knobs that change what you can run
+
+![](charts/probe-limit-light.svg){.light-content fig-alt="Line chart: decode speed along each configuration's context ladder"}
+![](charts/probe-limit-dark.svg){.dark-content fig-alt="Line chart: decode speed along each configuration's context ladder"}
+
+**Figure 4.** Decode speed along each configuration's context ladder, out to the point where it stops. Speed at the limit is what decides whether a long context is usable rather than merely loadable: flash-attn off manages 125.9 tokens/s at 67 584 tokens; flash-attn on manages 94.0 tokens/s at 262 144 tokens; ollama defaults manages 85.8 tokens/s at 262 144 tokens; the max-context winner manages 49.2 tokens/s at 262 144 tokens; llama.cpp stock manages 28.8 tokens/s at 262 144 tokens.
+
+![](charts/vram-depth-light.svg){.light-content fig-alt="Line chart: peak VRAM against context depth per configuration"}
+![](charts/vram-depth-dark.svg){.dark-content fig-alt="Line chart: peak VRAM against context depth per configuration"}
+
+**Figure 5.** Peak VRAM as context grows, and where each configuration stops: flash-attn off 15.78 GB, flash-attn on 4.74 GB, the max-context winner 3.07 GB at its deepest completed request.
+<!-- llmbench:generated:end context -->
+
+<!-- llmbench:commentary:begin context-notes -->
+*TODO — commentary.*
+<!-- llmbench:commentary:end context-notes -->
+
+<!-- llmbench:generated:begin flat hash=2a35d3f7caca -->
+## In depth — the knobs that don't matter
+
+![](charts/refine-flat-light.svg){.light-content fig-alt="Strip plot: decode speed of every refine configuration, by family"}
+![](charts/refine-flat-dark.svg){.dark-content fig-alt="Strip plot: decode speed of every refine configuration, by family"}
+
+**Figure 6.** Every batch, micro-batch and thread combination the refine stage measured (96 configurations). Within a family the whole spread is 2.57 tokens/s; between families it is 30.8 — the flat knobs are flat, and the categorical ones are not.
+
+![](charts/kv-canary-light.svg){.light-content fig-alt="Bar chart: canary decode speed per KV-cache quantization, with power draw"}
+![](charts/kv-canary-dark.svg){.dark-content fig-alt="Bar chart: canary decode speed per KV-cache quantization, with power draw"}
+
+**Figure 7.** The KV-cache canary at 16k context. The spread is 1.22× (252.0 to 306.3 tokens/s) — the slow cluster is silently running on the CPU, which the power draw confirms.
+<!-- llmbench:generated:end flat -->
+
+<!-- llmbench:commentary:begin flat-notes -->
+*TODO — commentary.*
+<!-- llmbench:commentary:end flat-notes -->
+
+<!-- llmbench:generated:begin power hash=fe20f083062a -->
+## Power and energy
+
+![](charts/power-energy-light.svg){.light-content fig-alt="Power timeline plus bars of joules per 1000 generated tokens"}
+![](charts/power-energy-dark.svg){.dark-content fig-alt="Power timeline plus bars of joules per 1000 generated tokens"}
+
+**Figure 8.** Power over a long generation, and the honest energy figure it integrates to — joules per 1000 generated tokens: ollama defaults 344 J, the funnel winner 353 J, the max-context winner 364 J, llama.cpp stock 366 J. Ranking by average watts would invert this. These are card joules; the CPU package adds 83–127 J on top, so ollama defaults really costs 471 J per 1000 tokens. At the wall socket the whole box costs 566 J per 1000 tokens for the funnel winner — 130 J more than the counters see, which is the PSU, the RAM, the fans and the drives.
+<!-- llmbench:generated:end power -->
+
+<!-- llmbench:commentary:begin power-notes -->
+*TODO — commentary.*
+<!-- llmbench:commentary:end power-notes -->
+
+<!-- llmbench:generated:begin scoreboard hash=71a49e8e633e -->
+## The tuning scoreboard
+
+| Objective | ollama defaults | tuned llama.cpp | delta |
+|---|---|---|---|
+| Decode @ 512 tokens | 273.2 t/s | 362.0 t/s | +32.5 % |
+| Decode @ 32k | 216.5 t/s | 268.4 t/s | +24.0 % |
+| Time-to-first-token @ 512 | 296.5 ms | 39.8 ms | −86.6 % |
+| Cold start | 4.32 s | 1.02 s | −3.30 s |
+| Energy per 1000 tokens (wall) | 656 J | 566 J | −13.7 % |
+
+Max context is the objective the table cannot hold, because it is not an ollama-versus-tuned question: across tuned configurations it ranges from 67 584 to 262 144 tokens — a spread of 3.9× on one card.
+
+Against llama.cpp's own stock settings rather than ollama's, the numeric knobs are worth +3.1 % decode — the categorical ones are where the tuning value is.
+<!-- llmbench:generated:end scoreboard -->
+
+<!-- llmbench:generated:begin translations hash=72c096a6cf9e -->
+## What this means in human units
+
+| Configuration | A 100-page PDF | Reads back at | Cost per 1M tokens |
+|---|---|---|---|
+| Out of the box (ollama defaults) | 7.8 s (5.4 s reading + 2.3 s writing) | 214 words/s, 53.5× a human reader | <span data-kwh-per-1m="0.18228">€0.0456</span> |
+| Tuned for throughput | 6.6 s (4.7 s reading + 1.9 s writing) | 273 words/s, 68.3× a human reader | <span data-kwh-per-1m="0.15711">€0.0393</span> |
+| Tuned for context | 7.3 s (4.8 s reading + 2.5 s writing) | 254 words/s, 63.5× a human reader | <span data-kwh-per-1m="0.16494">€0.0412</span> |
+
+<!-- llmbench:site-only:begin -->
+
+Price it at your own tariff — the table above is computed at 0.25 €/kWh.
+
+<div class="llmbench-price">
+  <label for="llmbench-kwh">Electricity price</label>
+  <input type="range" id="llmbench-kwh" min="0.10" max="0.50" step="0.01"
+         value="0.25" aria-describedby="llmbench-kwh-out">
+  <output id="llmbench-kwh-out">0.25 €/kWh</output>
+</div>
+<script>
+(function () {
+  var slider = document.getElementById("llmbench-kwh");
+  var out = document.getElementById("llmbench-kwh-out");
+  if (!slider || !out) return;
+  function apply() {
+    var price = parseFloat(slider.value);
+    out.textContent = price.toFixed(2) + " \u20ac/kWh";
+    document.querySelectorAll("[data-kwh-per-1m]").forEach(function (el) {
+      var kwh = parseFloat(el.getAttribute("data-kwh-per-1m"));
+      el.textContent = "\u20ac" + (kwh * price).toFixed(4);
+    });
+  }
+  slider.addEventListener("input", apply);
+  apply();
+})();
+</script>
+<!-- llmbench:site-only:end -->
+
+A "page" here is 650 tokens and a summary is 500; reading speed converts tokens to words at 0.75 and compares against 240 words per minute. Energy is GPU board power only — no power supply losses, no CPU, no fans.
+<!-- llmbench:generated:end translations -->
+
+<!-- llmbench:commentary:begin standout -->
+## What stood out
+
+*TODO — commentary.*
+<!-- llmbench:commentary:end standout -->
+
+<!-- llmbench:generated:begin repro hash=e9dd77da6a70 -->
+## Reproducing this
+
+Every number in this post was produced by the pipeline from committed results — none of it is typed by hand. To reproduce:
+
+```
+bench run --model qwen3.5-0.8b --hw-profile budget --runtime llama.cpp@b10068
+bench run --model qwen3.5-0.8b --hw-profile budget --runtime ollama@v0.32.1
+bench analyze --model qwen3.5-0.8b --hw-profile budget
+bench stage qwen3.5-0.8b --hw-profile budget
+```
+
+Benchmark suite `v1`, results commit `2722d64`. Prompts are cut to exact token counts with the model's own tokenizer and output length is forced, so every configuration processes and generates exactly the same number of tokens. Reported values are medians over repetitions with the inter-quartile spread; out-of-memory outcomes are recorded as data, not discarded.
+
+[Open the full board for this model](board.html) — every figure, including the ones that did not make the post.
+<!-- llmbench:generated:end repro -->
