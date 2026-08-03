@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="534.341797pt" height="301.484078pt" viewBox="0 0 534.341797 301.484078" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 301.484078 
+L 534.341797 301.484078 
+L 534.341797 0 
+L 0 0 
+L 0 301.484078 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 47.261797 262.224 
+L 527.141797 262.224 
+L 527.141797 7.2 
+L 47.261797 7.2 
+L 47.261797 262.224 
+z
+" style="fill: none"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m91d4d0f463" d="M 0 0 
+L 0 3.5 
+" style="stroke: #6e747b; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m91d4d0f463" x="69.074524" y="262.224" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #6e747b" x="69.074524" y="276.822437" transform="rotate(-0 69.074524 276.822437)">2k</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m91d4d0f463" x="193.71868" y="262.224" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #6e747b" x="193.71868" y="276.822437" transform="rotate(-0 193.71868 276.822437)">8k</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m91d4d0f463" x="318.362836" y="262.224" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #6e747b" x="318.362836" y="276.822437" transform="rotate(-0 318.362836 276.822437)">32k</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m91d4d0f463" x="443.006992" y="262.224" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #6e747b" x="443.006992" y="276.822437" transform="rotate(-0 443.006992 276.822437)">128k</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m91d4d0f463" x="505.32907" y="262.224" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #6e747b" x="505.32907" y="276.822437" transform="rotate(-0 505.32907 276.822437)">256k</text>
+     </g>
+    </g>
+    <g id="text_6">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #21252a" x="287.201797" y="291.6415" transform="rotate(-0 287.201797 291.6415)">context size (probe: doubling, full-context request each step)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_6">
+      <path d="M 47.261797 262.224 
+L 527.141797 262.224 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #e4e4de; stroke-width: 0.7; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_7">
+      <defs>
+       <path id="me805eda799" d="M 0 0 
+L -3.5 0 
+" style="stroke: #6e747b; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#me805eda799" x="47.261797" y="262.224" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end; fill: #6e747b" x="40.261797" y="266.022828" transform="rotate(-0 40.261797 266.022828)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_8">
+      <path d="M 47.261797 215.080456 
+L 527.141797 215.080456 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #e4e4de; stroke-width: 0.7; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#me805eda799" x="47.261797" y="215.080456" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end; fill: #6e747b" x="40.261797" y="218.879284" transform="rotate(-0 40.261797 218.879284)">50</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_10">
+      <path d="M 47.261797 167.936912 
+L 527.141797 167.936912 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #e4e4de; stroke-width: 0.7; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#me805eda799" x="47.261797" y="167.936912" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end; fill: #6e747b" x="40.261797" y="171.73574" transform="rotate(-0 40.261797 171.73574)">100</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_12">
+      <path d="M 47.261797 120.793368 
+L 527.141797 120.793368 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #e4e4de; stroke-width: 0.7; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#me805eda799" x="47.261797" y="120.793368" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end; fill: #6e747b" x="40.261797" y="124.592197" transform="rotate(-0 40.261797 124.592197)">150</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_14">
+      <path d="M 47.261797 73.649825 
+L 527.141797 73.649825 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #e4e4de; stroke-width: 0.7; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#me805eda799" x="47.261797" y="73.649825" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end; fill: #6e747b" x="40.261797" y="77.448653" transform="rotate(-0 40.261797 77.448653)">200</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_16">
+      <path d="M 47.261797 26.506281 
+L 527.141797 26.506281 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #e4e4de; stroke-width: 0.7; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#me805eda799" x="47.261797" y="26.506281" style="fill: #6e747b; stroke: #6e747b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end; fill: #6e747b" x="40.261797" y="30.305109" transform="rotate(-0 40.261797 30.305109)">250</text>
+     </g>
+    </g>
+    <g id="text_13">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: middle; fill: #21252a" x="15.558281" y="134.712" transform="rotate(-90 15.558281 134.712)">decode tokens/s at that context</text>
+    </g>
+   </g>
+   <g id="line2d_18">
+    <path d="M 69.074524 46.101966 
+L 131.396602 48.351656 
+L 193.71868 54.040939 
+L 256.040758 64.884897 
+L 318.362836 83.60937 
+L 380.684914 111.896439 
+L 443.006992 147.940507 
+L 505.32907 185.096219 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #c75b28; stroke-width: 2.2; stroke-linecap: square"/>
+    <defs>
+     <path id="m4e25a494b9" d="M 0 2.5 
+C 0.663008 2.5 1.29895 2.236584 1.767767 1.767767 
+C 2.236584 1.29895 2.5 0.663008 2.5 0 
+C 2.5 -0.663008 2.236584 -1.29895 1.767767 -1.767767 
+C 1.29895 -2.236584 0.663008 -2.5 0 -2.5 
+C -0.663008 -2.5 -1.29895 -2.236584 -1.767767 -1.767767 
+C -2.236584 -1.29895 -2.5 -0.663008 -2.5 0 
+C -2.5 0.663008 -2.236584 1.29895 -1.767767 1.767767 
+C -1.29895 2.236584 -0.663008 2.5 0 2.5 
+z
+" style="stroke: #c75b28"/>
+    </defs>
+    <g clip-path="url(#pba476eb1a6)">
+     <use xlink:href="#m4e25a494b9" x="69.074524" y="46.101966" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="131.396602" y="48.351656" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="193.71868" y="54.040939" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="256.040758" y="64.884897" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="318.362836" y="83.60937" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="380.684914" y="111.896439" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="443.006992" y="147.940507" style="fill: #c75b28; stroke: #c75b28"/>
+     <use xlink:href="#m4e25a494b9" x="505.32907" y="185.096219" style="fill: #c75b28; stroke: #c75b28"/>
+    </g>
+   </g>
+   <g id="line2d_19">
+    <path d="M 69.074524 53.068839 
+L 131.396602 60.920125 
+L 193.71868 69.708624 
+L 256.040758 89.187394 
+L 318.362836 119.657209 
+L 380.684914 154.383143 
+L 443.006992 190.598814 
+L 505.32907 219.19043 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #de9a6f; stroke-width: 2.2; stroke-linecap: square"/>
+    <defs>
+     <path id="m49935c0e99" d="M 0 2.5 
+C 0.663008 2.5 1.29895 2.236584 1.767767 1.767767 
+C 2.236584 1.29895 2.5 0.663008 2.5 0 
+C 2.5 -0.663008 2.236584 -1.29895 1.767767 -1.767767 
+C 1.29895 -2.236584 0.663008 -2.5 0 -2.5 
+C -0.663008 -2.5 -1.29895 -2.236584 -1.767767 -1.767767 
+C -2.236584 -1.29895 -2.5 -0.663008 -2.5 0 
+C -2.5 0.663008 -2.236584 1.29895 -1.767767 1.767767 
+C -1.29895 2.236584 -0.663008 2.5 0 2.5 
+z
+" style="stroke: #de9a6f"/>
+    </defs>
+    <g clip-path="url(#pba476eb1a6)">
+     <use xlink:href="#m49935c0e99" x="69.074524" y="53.068839" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="131.396602" y="60.920125" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="193.71868" y="69.708624" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="256.040758" y="89.187394" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="318.362836" y="119.657209" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="380.684914" y="154.383143" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="443.006992" y="190.598814" style="fill: #de9a6f; stroke: #de9a6f"/>
+     <use xlink:href="#m49935c0e99" x="505.32907" y="219.19043" style="fill: #de9a6f; stroke: #de9a6f"/>
+    </g>
+   </g>
+   <g id="line2d_20">
+    <path d="M 69.074524 83.886574 
+L 131.396602 85.935432 
+L 193.71868 88.526441 
+L 256.040758 95.58383 
+L 318.362836 110.674478 
+L 380.684914 128.213762 
+L 443.006992 159.012639 
+L 505.32907 190.854332 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #40708f; stroke-width: 2.2; stroke-linecap: square"/>
+    <defs>
+     <path id="m23c40e4eef" d="M 0 2.5 
+C 0.663008 2.5 1.29895 2.236584 1.767767 1.767767 
+C 2.236584 1.29895 2.5 0.663008 2.5 0 
+C 2.5 -0.663008 2.236584 -1.29895 1.767767 -1.767767 
+C 1.29895 -2.236584 0.663008 -2.5 0 -2.5 
+C -0.663008 -2.5 -1.29895 -2.236584 -1.767767 -1.767767 
+C -2.236584 -1.29895 -2.5 -0.663008 -2.5 0 
+C -2.5 0.663008 -2.236584 1.29895 -1.767767 1.767767 
+C -1.29895 2.236584 -0.663008 2.5 0 2.5 
+z
+" style="stroke: #40708f"/>
+    </defs>
+    <g clip-path="url(#pba476eb1a6)">
+     <use xlink:href="#m23c40e4eef" x="69.074524" y="83.886574" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="131.396602" y="85.935432" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="193.71868" y="88.526441" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="256.040758" y="95.58383" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="318.362836" y="110.674478" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="380.684914" y="128.213762" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="443.006992" y="159.012639" style="fill: #40708f; stroke: #40708f"/>
+     <use xlink:href="#m23c40e4eef" x="505.32907" y="190.854332" style="fill: #40708f; stroke: #40708f"/>
+    </g>
+   </g>
+   <g id="line2d_21">
+    <path d="M 69.074524 49.354871 
+L 131.396602 52.935894 
+L 193.71868 61.496219 
+L 256.040758 78.962902 
+L 318.362836 107.761007 
+L 380.684914 146.651602 
+L 443.006992 215.640521 
+L 505.32907 236.325223 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke: #83898f; stroke-width: 2.2; stroke-linecap: square"/>
+    <defs>
+     <path id="m80a89b7942" d="M 0 2.5 
+C 0.663008 2.5 1.29895 2.236584 1.767767 1.767767 
+C 2.236584 1.29895 2.5 0.663008 2.5 0 
+C 2.5 -0.663008 2.236584 -1.29895 1.767767 -1.767767 
+C 1.29895 -2.236584 0.663008 -2.5 0 -2.5 
+C -0.663008 -2.5 -1.29895 -2.236584 -1.767767 -1.767767 
+C -2.236584 -1.29895 -2.5 -0.663008 -2.5 0 
+C -2.5 0.663008 -2.236584 1.29895 -1.767767 1.767767 
+C -1.29895 2.236584 -0.663008 2.5 0 2.5 
+z
+" style="stroke: #83898f"/>
+    </defs>
+    <g clip-path="url(#pba476eb1a6)">
+     <use xlink:href="#m80a89b7942" x="69.074524" y="49.354871" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="131.396602" y="52.935894" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="193.71868" y="61.496219" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="256.040758" y="78.962902" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="318.362836" y="107.761007" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="380.684914" y="146.651602" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="443.006992" y="215.640521" style="fill: #83898f; stroke: #83898f"/>
+     <use xlink:href="#m80a89b7942" x="505.32907" y="236.325223" style="fill: #83898f; stroke: #83898f"/>
+    </g>
+   </g>
+   <g id="line2d_22">
+    <path d="M 505.32907 262.224 
+L 505.32907 7.2 
+" clip-path="url(#pba476eb1a6)" style="fill: none; stroke-dasharray: 2,3; stroke-dashoffset: 0; stroke: #6e747b; stroke-opacity: 0.8"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 47.261797 262.224 
+L 47.261797 7.2 
+" style="fill: none; stroke: #6e747b; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 47.261797 262.224 
+L 527.141797 262.224 
+" style="fill: none; stroke: #6e747b; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #c75b28" x="513.32907" y="188.096219" transform="rotate(-0 513.32907 188.096219)">82</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #de9a6f" x="513.32907" y="222.19043" transform="rotate(-0 513.32907 222.19043)">46</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #40708f" x="513.32907" y="193.854332" transform="rotate(-0 513.32907 193.854332)">76</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 9.5px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #83898f" x="513.32907" y="239.325223" transform="rotate(-0 513.32907 239.325223)">27</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #6e747b" transform="translate(378.126882 21.470946)">param ceiling 262144 —</text>
+    <text style="font-size: 9px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; fill: #6e747b" transform="translate(313.107507 32.32122)">all five complete, no OOM on 16 GB</text>
+   </g>
+   <g id="legend_1">
+    <g id="line2d_23">
+     <path d="M 55.541797 206.965063 
+L 64.741797 206.965063 
+L 73.941797 206.965063 
+" style="fill: none; stroke: #c75b28; stroke-width: 2.2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m4e25a494b9" x="64.741797" y="206.965063" style="fill: #c75b28; stroke: #c75b28"/>
+     </g>
+    </g>
+    <g id="text_19">
+     <text style="font-size: 9.2px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #21252a" x="81.301797" y="210.185063" transform="rotate(-0 81.301797 210.185063)">tuned fa ON (f16 KV)</text>
+    </g>
+    <g id="line2d_24">
+     <path d="M 55.541797 220.814656 
+L 64.741797 220.814656 
+L 73.941797 220.814656 
+" style="fill: none; stroke: #de9a6f; stroke-width: 2.2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m49935c0e99" x="64.741797" y="220.814656" style="fill: #de9a6f; stroke: #de9a6f"/>
+     </g>
+    </g>
+    <g id="text_20">
+     <text style="font-size: 9.2px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #21252a" x="81.301797" y="224.034656" transform="rotate(-0 81.301797 224.034656)">max-ctx “winner” (q4/q4 KV, fa on)</text>
+    </g>
+    <g id="line2d_25">
+     <path d="M 55.541797 234.66425 
+L 64.741797 234.66425 
+L 73.941797 234.66425 
+" style="fill: none; stroke: #40708f; stroke-width: 2.2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m23c40e4eef" x="64.741797" y="234.66425" style="fill: #40708f; stroke: #40708f"/>
+     </g>
+    </g>
+    <g id="text_21">
+     <text style="font-size: 9.2px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #21252a" x="81.301797" y="237.88425" transform="rotate(-0 81.301797 237.88425)">ollama · defaults</text>
+    </g>
+    <g id="line2d_26">
+     <path d="M 55.541797 248.513844 
+L 64.741797 248.513844 
+L 73.941797 248.513844 
+" style="fill: none; stroke: #83898f; stroke-width: 2.2; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m80a89b7942" x="64.741797" y="248.513844" style="fill: #83898f; stroke: #83898f"/>
+     </g>
+    </g>
+    <g id="text_22">
+     <text style="font-size: 9.2px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start; fill: #21252a" x="81.301797" y="251.733844" transform="rotate(-0 81.301797 251.733844)">tuned fa OFF (f16 KV)</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pba476eb1a6">
+   <rect x="47.261797" y="7.2" width="479.88" height="255.024"/>
+  </clipPath>
+ </defs>
+</svg>
