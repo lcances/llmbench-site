@@ -1,0 +1,206 @@
+name: LLM Benchmarks for Devs & Customers
+model: moonshotai/kimi-k2-0905
+systemPrompt: "You are writing a concise, customer-focused LLM inference benchmark post tailored for dev.to. Voice: direct, practical, customer-oriented. Focus on user experience (TTFT), running costs (cost/1M tokens), power draw, and throughput at scaling context sizes. Avoid overly deep low-level compiler jargon; focus on business and developer trade-offs. Keep sentences short and readable."
+siteRepo: lcances/llmbench-site
+categories:
+  - ai
+  - llm
+  - benchmark
+  - devops
+dataSchema:
+  - key: model_name
+    label: Model Name
+    type: text
+    path: model
+  - key: hw_profile
+    label: Hardware Profile
+    type: text
+    path: hw_profile
+  - key: gpu_name
+    label: GPU Model
+    type: text
+    path: env.gpus[0].name
+  - key: gpu_power_limit_w
+    label: GPU Power Limit
+    type: number
+    unit: W
+    path: env.gpus[0].power_limit_w
+  - key: runtime_engine
+    label: Runtime Engine
+    type: text
+    path: series[role=tuned:max_throughput].runtime
+  - key: artifact
+    label: Quantization / Artifact
+    type: text
+    path: series[role=tuned:max_throughput].artifact
+  - key: load_time_s
+    label: Model Load Time
+    type: number
+    unit: s
+    path: series[role=tuned:max_throughput].load_time_s.median
+  - key: wall_w_mean
+    label: Average Wall Power Draw
+    type: number
+    unit: W
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].wall_w_mean
+  - key: energy_j_per_1k
+    label: Energy Consumption
+    type: number
+    unit: J/1k tok
+    path: series[role=tuned:max_throughput].translations.energy.j_per_1k_gen
+  - key: cost_eur_per_1m
+    label: Power Cost / 1M Tokens
+    type: number
+    unit: €/1M tok
+    path: series[role=tuned:max_throughput].translations.energy.eur_per_1m_gen
+  - key: ttft_512_ms
+    label: TTFT (512 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].ttft_ms.median
+  - key: ttft_2k_ms
+    label: TTFT (2,048 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=2048].ttft_ms.median
+  - key: ttft_8k_ms
+    label: TTFT (8,192 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].ttft_ms.median
+  - key: ttft_32k_ms
+    label: TTFT (32,768 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=32768].ttft_ms.median
+  - key: prefill_512_tps
+    label: Prefill Speed (512t)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].prefill_tps.median
+  - key: prefill_8k_tps
+    label: Prefill Speed (8k)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].prefill_tps.median
+  - key: prefill_32k_tps
+    label: Prefill Speed (32k)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=32768].prefill_tps.median
+  - key: prefill_max_context_tps
+    label: Prefill Speed (Max Context)
+    type: number
+    unit: tok/s
+    path: series[role=best:flash_attn=on].full_points[max:ctx].prefill_tps.median
+  - key: ttft_max_context_ms
+    label: TTFT (Max Context)
+    type: number
+    unit: ms
+    path: series[role=best:flash_attn=on].full_points[max:ctx].ttft_ms.median
+  - key: decode_512_tps
+    label: Generation Speed (512t prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].decode_tps.median
+  - key: decode_8k_tps
+    label: Generation Speed (8k prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].decode_tps.median
+  - key: decode_32k_tps
+    label: Generation Speed (32k prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=32768].decode_tps.median
+  - key: decode_max_context_tps
+    label: Generation Speed (Max Context)
+    type: number
+    unit: tok/s
+    path: series[role=best:flash_attn=on].full_points[max:ctx].decode_tps.median
+  - key: decode_tps
+    label: Decode Speed (1k gen)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].decode_curve[output_tokens=1024].decode_tps.median
+  - key: max_context
+    label: Max Context Supported
+    type: number
+    unit: tokens
+    path: series[role=tuned:max_context].translations.pdf_summary.max_context
+  - key: reading_wps
+    label: Reading Speed
+    type: number
+    unit: words/s
+    path: series[role=tuned:max_throughput].translations.reading.words_per_s
+  - key: verdict
+    label: Verdict
+    type: select
+    options:
+      - Great for Production
+      - Good for Internal Tools
+      - Niche / Heavy Requirements
+      - Not Recommended
+      - Custom...
+blocks:
+  - id: config-summary
+    title: Configuration & Setup
+    type: generated
+    prompt: |-
+      Write two short sentences explaining that during the entire series, the hardware is not going to change.
+
+      create a markdown table that contain the following information
+      - cpu: Intel Core Ultra 7 265K
+      - motherboard: ASUS ROG MAXIMUS Z890 APEX Hovedkort - Intel Z890
+      - ram: Kingston FURY Beast DDR5-5600 - 64GB (32 Gb)
+      - gpu: MSI GeForce RTX 5060 Ti  (16 Gb GDDR7)
+      - system: {os}
+      - llama.cpp version: {runtime_engine}
+      - ollama version: ollama@v0.32.1
+    dataPaths:
+      - env.os
+  - id: straight-to-results
+    title: Straight to the Results
+    type: generated
+    prompt: |-
+      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Then include the following exact Markdown metric comparison table:
+
+      | Metric | 512 Context | 32k Context | Max Context ({max_context}) |
+      | --- | --- | --- | --- |
+      | Prompt Processing (tok/s) | {prefill_512_tps} | {prefill_32k_tps} | {prefill_max_context_tps} |
+      | TTFT (ms) | {ttft_512_ms} | {ttft_32k_ms} | {ttft_max_context_ms} |
+      | Decode Speed (tok/s) | {decode_512_tps} | {decode_32k_tps} | {decode_max_context_tps} |
+      | Cost (€/1M tok) | {cost_eur_per_1m} | {cost_eur_per_1m} | {cost_eur_per_1m} |
+  - id: bottom-line
+    title: Customer Verdict
+    type: generated
+    prompt: "Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Highlight what customers care about most: interactive responsiveness ({ttft_512_ms}ms TTFT), generation speed ({decode_tps} tok/s), prompt processing speed at max context ({prefill_max_context_tps} tok/s), and wall power cost ({cost_eur_per_1m}€/1M tokens)."
+  - id: power-and-cost
+    title: Power & Cost per 1M Tokens
+    type: generated
+    prompt: Write 1 short paragraph analyzing power draw ({wall_w_mean}W wall draw, {energy_j_per_1k} J/1k tokens) and total electricity cost ({cost_eur_per_1m}€ per 1M generated tokens) for running {model_name}. Compare with the previous issue’s {prev.model_name} ({prev.cost_eur_per_1m}€/1M tok).
+  - id: latency-ttft
+    title: TTFT Latency Scaling
+    type: generated
+    prompt: Write 1 short paragraph analyzing TTFT latency scaling from 512 tokens ({ttft_512_ms}ms, {prefill_512_tps} tok/s prefill) up to 8k ({ttft_8k_ms}ms) and 32k tokens ({ttft_32k_ms}ms).
+  - id: generation-speed
+    title: Generation Speed (tok/s)
+    type: generated
+    prompt: Write 1 short paragraph analyzing generation speed from 512 tokens prompt context ({decode_512_tps} tok/s, {reading_wps} words/s) down to 32k tokens context ({decode_32k_tps} tok/s).
+  - id: context-table
+    title: Context Scaling Table
+    type: data-table
+    prompt: ""
+    table:
+      arrayPath: series[role=tuned:max_throughput].prefill_curve
+      columns:
+        - label: Prompt Tokens
+          path: prompt_tokens
+        - label: TTFT (ms)
+          path: ttft_ms.median
+        - label: Prefill (tok/s)
+          path: prefill_tps.median
+        - label: Decode (tok/s)
+          path: decode_tps.median
+        - label: Wall Power (W)
+          path: wall_w_mean
