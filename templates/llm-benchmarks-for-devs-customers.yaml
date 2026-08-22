@@ -4,6 +4,9 @@ systemPrompt: |-
   Avoid developer specific jargon and benchmarking vocabulary. the audience are people that just have 5 minutes to read an article that goes to the point.
   Keep the vocabulaire focus and don't extrapolate
 
+  BANNED WORD
+  skewing, 
+
   don't generate title or markdown output. don't use bullet list unless specified, dont generate markdown table unless specified
 siteRepo: lcances/llmbench-site
 categories:
@@ -52,6 +55,11 @@ dataSchema:
     type: number
     unit: J/1k tok
     path: series[role=tuned:max_throughput].translations.energy.j_per_1k_gen
+  - key: energy_kwh_per_1M
+    label: Energy Consumption
+    type: number
+    unit: kWh/1M tok
+    path: series[role=tuned:max_throughput].translations.energy.kwh_per_1m_gen
   - key: cost_eur_per_1m
     label: Power Cost / 1M Tokens
     type: number
@@ -166,7 +174,7 @@ blocks:
     title: Configuration & Setup
     type: generated
     prompt: |-
-      Write two short sentences explaining that during the entire series, the hardware is not going to change.
+      Write two short sentences explaining that during the entire series, the hardware is not going to change. That will make the result more comparable between different series of model
 
       create a markdown table that contain the following information
       - cpu: Intel Core Ultra 7 265K
@@ -182,7 +190,7 @@ blocks:
     title: Straight to the Results
     type: generated
     prompt: |-
-      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Write one small line about the energy consumption in kWh for 1M token. Here the energy in J and 1k token = {energy_j_per_1k}. Then include the following exact Markdown metric comparison table:
+      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Write one small line about the energy consumption in kWh for 1M token ({energy_kwh_per_1M}). Then include the following exact Markdown metric comparison table:
 
       | Metric | 512 Context | 32k Context | Max Context ({max_context}) |
       | --- | --- | --- | --- |
@@ -197,8 +205,8 @@ blocks:
     title: Decode speed at context size
     type: data-chart
     prompt: ""
-    notes: |2-
-       Role                                                                              │ Description
+    notes: |-
+      Role                                                                              │ Description
         ───────────────────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────
          baseline                                                                          │ Stock llama.cpp defaults (Flash Attention OFF, f16 KV cache, default batching).
          best:flash_attn=on                                                                │ Best performing run with Flash Attention enabled.
@@ -245,6 +253,20 @@ blocks:
       at max context ({max_context}) the decode speed is {decode_max_context_tps}, the prompt processing speed is {prefill_max_context_tps}
 
 
-
       Write a small paragraph analysing the decode speed. In a very short sentence, comment on the prompt processing speed
-      Conclude in casual term compare it to human reading speed
+  - id: a6122d19-f8b0-414d-86b1-ff9856a9be96
+    title: Conclusion
+    type: generated
+    prompt: |-
+      Write a small conclusion paragraph about the usablity of {model_name} on a budget computer with a {gpu_name}. Use real world comparison.
+
+      fastest reponse time is {ttft_512_ms}, slowest is ttft_max_context_ms}
+      fastest decoding speed is {decode_512_tps}, slowest is {decode_max_context_tps}.
+      energy consumption in kWh for 1M token is {energy_kwh_per_1M}
+  - id: 05fe08ae-1c29-4438-9504-279ac276787c
+    title: Further reading
+    type: generated
+    prompt: |-
+      - Add a placeholder link to the complete benchmark article.
+      - Add a placeholder link to the previous article of the series.
+      - Add a placeholder link to the next article of the series.
