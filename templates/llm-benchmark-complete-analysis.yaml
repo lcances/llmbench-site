@@ -10,9 +10,11 @@ systemPrompt: |-
   - If a value has several digits, round to the nearest integer (no comma).
   - Never invent or extrapolate a number that was not provided.
   - Don't generate titles or markdown headers. No bullet lists and no markdown tables unless the prompt explicitly asks for one.
-
+  - Use "I" instead of "we"
+  - Don't mention benchmark duration, you do not know it
+  - instead of building sentence with hyphen, use another structure, like the word "which"
   BANNED WORDS
-  skewing, game-changer, blazing
+  skewing, game-changer, blazing, —
 siteRepo: lcances/llmbench-site
 categories:
   - ai
@@ -334,7 +336,7 @@ blocks:
       role is merged with another (e.g. "best:flash_attn=on, tuned:min_ttft"), add the joined key.
     chart:
       arrayPath: series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
-      chartType: line
+      chartType: bar
       xPath: prompt_tokens
       yKeys:
         - decode_tps.median
@@ -363,7 +365,7 @@ blocks:
     prompt: ""
     chart:
       arrayPath: series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
-      chartType: line
+      chartType: bar
       xPath: prompt_tokens
       yKeys:
         - prefill_tps.median
