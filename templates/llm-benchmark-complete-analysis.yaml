@@ -1,0 +1,596 @@
+name: LLM Benchmark — Complete Analysis
+model: moonshotai/kimi-k2
+systemPrompt: |-
+  This is the complete, data-heavy companion article to a short 5-minute benchmark post. Two registers coexist:
+  - Section introductions (chapeaux) are plain language: a curious developer who never ran a local LLM must be able to follow them. No numbers unless the prompt gives them.
+  - Chart analyses are technical and precise: benchmarking vocabulary is allowed (TTFT, prefill, decode, KV cache, VRAM, OOM), and every claim cites a number with its unit.
+
+  Rules for every block:
+  - Choose the best unit for durations (245 ms stays 245 ms, 45689 ms becomes 46 s).
+  - If a value has several digits, round to the nearest integer (no comma).
+  - Never invent or extrapolate a number that was not provided.
+  - Don't generate titles or markdown headers. No bullet lists and no markdown tables unless the prompt explicitly asks for one.
+
+  BANNED WORDS
+  skewing, game-changer, blazing
+siteRepo: lcances/llmbench-site
+categories:
+  - ai
+  - llm
+  - benchmark
+  - devops
+  - performance
+dataSchema:
+  - key: model_name
+    label: Model Name
+    type: text
+    path: model
+  - key: hw_profile
+    label: Hardware Profile
+    type: text
+    path: hw_profile
+  - key: os
+    label: Operating System
+    type: text
+    path: env.os
+  - key: driver
+    label: NVIDIA Driver
+    type: text
+    path: env.driver
+  - key: gpu_name
+    label: GPU Model
+    type: text
+    path: env.gpus[0].name
+  - key: gpu_vram_mb
+    label: GPU VRAM
+    type: number
+    unit: MB
+    path: env.gpus[0].vram_total_mb
+  - key: gpu_power_limit_w
+    label: GPU Power Limit
+    type: number
+    unit: W
+    path: env.gpus[0].power_limit_w
+  - key: runtime_engine
+    label: Runtime Engine (llama.cpp)
+    type: text
+    path: series[role=tuned:max_throughput].runtime
+  - key: ollama_version
+    label: Runtime Engine (Ollama)
+    type: text
+    path: series[role=defaults].runtime
+  - key: artifact
+    label: Quantization / Artifact
+    type: text
+    path: series[role=tuned:max_throughput].artifact
+  - key: generated_at
+    label: Results Generated At
+    type: text
+    path: generated_at
+  - key: load_time_s
+    label: Model Load Time (tuned)
+    type: number
+    unit: s
+    path: series[role=tuned:max_throughput].load_time_s.median
+  - key: load_time_ollama_s
+    label: Model Load Time (Ollama)
+    type: number
+    unit: s
+    path: series[role=defaults].load_time_s.median
+  - key: ttft_512_ms
+    label: TTFT (512 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].ttft_ms.median
+  - key: ttft_2k_ms
+    label: TTFT (2,048 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=2048].ttft_ms.median
+  - key: ttft_8k_ms
+    label: TTFT (8,192 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].ttft_ms.median
+  - key: ttft_32k_ms
+    label: TTFT (32,768 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=32768].ttft_ms.median
+  - key: ttft_max_context_ms
+    label: TTFT (Max Context)
+    type: number
+    unit: ms
+    path: series[role=best:flash_attn=on].full_points[max:ctx].ttft_ms.median
+  - key: ttft_512_ollama_ms
+    label: TTFT (512 tokens, Ollama)
+    type: number
+    unit: ms
+    path: series[role=defaults].prefill_curve[prompt_tokens=512].ttft_ms.median
+  - key: prefill_512_tps
+    label: Prefill Speed (512t)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].prefill_tps.median
+  - key: prefill_8k_tps
+    label: Prefill Speed (8k)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].prefill_tps.median
+  - key: prefill_32k_tps
+    label: Prefill Speed (32k)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=32768].prefill_tps.median
+  - key: prefill_max_context_tps
+    label: Prefill Speed (Max Context)
+    type: number
+    unit: tok/s
+    path: series[role=best:flash_attn=on].full_points[max:ctx].prefill_tps.median
+  - key: decode_512_tps
+    label: Generation Speed (512t prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=512].decode_tps.median
+  - key: decode_8k_tps
+    label: Generation Speed (8k prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].decode_tps.median
+  - key: decode_32k_tps
+    label: Generation Speed (32k prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=32768].decode_tps.median
+  - key: decode_max_context_tps
+    label: Generation Speed (Max Context)
+    type: number
+    unit: tok/s
+    path: series[role=best:flash_attn=on].full_points[max:ctx].decode_tps.median
+  - key: decode_512_ollama_tps
+    label: Generation Speed (512t, Ollama)
+    type: number
+    unit: tok/s
+    path: series[role=defaults].prefill_curve[prompt_tokens=512].decode_tps.median
+  - key: decode_tps
+    label: Decode Speed (1k gen)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput].decode_curve[output_tokens=1024].decode_tps.median
+  - key: max_context
+    label: Max Context Supported
+    type: number
+    unit: tokens
+    path: series[role=tuned:max_context].translations.pdf_summary.max_context
+  - key: peak_vram_max_ctx_mb
+    label: Peak VRAM at Max Context
+    type: number
+    unit: MB
+    path: series[role=tuned:max_context].full_points[max:ctx].peak_vram_mb
+  - key: first_oom_faoff
+    label: First OOM (flash attn off)
+    type: number
+    unit: tokens
+    path: series[role=best:flash_attn=off].max_context.best:flash_attn=off.first_oom
+  - key: wall_w_mean
+    label: Average Wall Power Draw (8k)
+    type: number
+    unit: W
+    path: series[role=tuned:max_throughput].prefill_curve[prompt_tokens=8192].wall_w_mean
+  - key: energy_j_per_1k
+    label: Energy at the Wall
+    type: number
+    unit: J/1k tok
+    path: series[role=tuned:max_throughput].translations.energy.j_per_1k_gen
+  - key: energy_j_per_1k_gpu
+    label: Energy GPU Only
+    type: number
+    unit: J/1k tok
+    path: series[role=tuned:max_throughput].translations.energy.j_per_1k_gen_gpu
+  - key: energy_j_per_1k_ollama
+    label: Energy at the Wall (Ollama)
+    type: number
+    unit: J/1k tok
+    path: series[role=defaults].translations.energy.j_per_1k_gen
+  - key: energy_kwh_per_1M
+    label: Energy Consumption
+    type: number
+    unit: kWh/1M tok
+    path: series[role=tuned:max_throughput].translations.energy.kwh_per_1m_gen
+  - key: cost_eur_per_1m
+    label: Power Cost / 1M Tokens
+    type: number
+    unit: €/1M tok
+    path: series[role=tuned:max_throughput].translations.energy.eur_per_1m_gen
+  - key: pdf_read_s
+    label: 100-page PDF Read Time
+    type: number
+    unit: s
+    path: series[role=tuned:max_throughput].translations.pdf_summary.read_s
+  - key: pdf_write_s
+    label: 100-page PDF Summary Write Time
+    type: number
+    unit: s
+    path: series[role=tuned:max_throughput].translations.pdf_summary.write_s
+  - key: pdf_total_s
+    label: 100-page PDF Total Time
+    type: number
+    unit: s
+    path: series[role=tuned:max_throughput].translations.pdf_summary.total_s
+  - key: pdf_fits
+    label: 100-page PDF Fits in Context
+    type: text
+    path: series[role=tuned:max_context].translations.pdf_summary.fits
+  - key: reading_wps
+    label: Reading Speed
+    type: number
+    unit: words/s
+    path: series[role=tuned:max_throughput].translations.reading.words_per_s
+  - key: x_human_reading
+    label: Multiple of Human Reading Speed
+    type: number
+    unit: x
+    path: series[role=tuned:max_throughput].translations.reading.x_human_reading
+  - key: verdict
+    label: Verdict
+    type: select
+    options:
+      - Great for Production
+      - Good for Internal Tools
+      - Niche / Heavy Requirements
+      - Not Recommended
+      - Custom...
+blocks:
+  - id: intro
+    title: ""
+    type: generated
+    prompt: |-
+      Write the chapeau of the whole article: 3-4 plain-language sentences. We benchmarked {model_name} end to end on a single {gpu_name}: raw speed, how it degrades with long prompts, how far the context can be pushed before the card runs out of memory, what tuning actually buys, and what it costs in electricity. Mention that this is the full-data companion to a shorter 5-minute article, and that every number below was measured on the same machine.
+
+      For reference on expected capacity (use it to set expectations for {model_name}, one short sentence):
+      - very small models (<2B) are useful for tasks that require speed (routing, safe guard, monitoring, reranking)
+      - small models (<8B) can be interesting to run on mobile or on edge
+      - dense medium size models (10B <> 27B) start to be interesting for analysing and general knowledge
+      - dense medium MoE (35B a3b) are interesting for VRAM constrained systems and more specialized work
+  - id: method-bench
+    title: The Test Bench & Method
+    type: generated
+    prompt: |-
+      Write two short plain sentences: the hardware never changes across the whole series so results stay comparable between models, and power is measured at the wall socket with a smart plug — the whole box, not just the GPU.
+
+      Then include a markdown table with exactly this information:
+      - cpu: Intel Core Ultra 7 265K
+      - motherboard: ASUS ROG MAXIMUS Z890 APEX Hovedkort - Intel Z890
+      - ram: Kingston FURY Beast DDR5-5600 - 64GB (32 Gb)
+      - gpu: MSI GeForce RTX 5060 Ti (16 Gb GDDR7)
+      - system: {os}
+      - nvidia driver: {driver}
+      - llama.cpp version: {runtime_engine}
+      - ollama version: {ollama_version}
+      - model artifact: {artifact}
+  - id: contenders-intro
+    title: The Contenders
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: the same model file was run under several configurations — Ollama exactly as it installs, stock llama.cpp, and llama.cpp tuned for different goals (maximum speed, lowest latency, longest context). The table below lists every configuration and the knobs that differ."
+  - id: series-lineup
+    title: ""
+    type: data-table
+    prompt: ""
+    notes: |-
+      Role                        │ Description
+      ────────────────────────────┼──────────────────────────────────────────────────────────────
+      baseline                    │ Stock llama.cpp defaults (Flash Attention OFF, f16 KV cache, default batching).
+      best:flash_attn=on          │ Best performing run with Flash Attention enabled.
+      best:flash_attn=off         │ Best performing run with Flash Attention disabled.
+      tuned:max_throughput        │ Swept & tuned batch/thread knobs for maximum tokens/sec.
+      tuned:min_ttft              │ Swept & tuned for lowest Time-To-First-Token latency.
+      tuned:max_context           │ Quantized KV cache (e.g. q4_0) + Flash Attention to maximize usable context.
+      reference:ollama-defaults   │ llama.cpp running the exact CLI flags Ollama passes (-fa auto -b 512 -ub 512 -t 4).
+      defaults                    │ The actual Ollama runtime instance with stock configuration.
+    table:
+      arrayPath: series
+      columns:
+        - label: Role
+          path: role
+        - label: Runtime
+          path: runtime
+        - label: Flash Attn
+          path: config.flash_attn
+        - label: KV K
+          path: config.kv_type_k
+        - label: KV V
+          path: config.kv_type_v
+        - label: Batch
+          path: config.batch_size
+        - label: uBatch
+          path: config.ubatch_size
+        - label: Threads
+          path: config.threads
+        - label: Load (s)
+          path: load_time_s.median
+        - label: Peak VRAM (MB)
+          path: peak_vram_mb
+  - id: headline
+    title: Straight to the Results
+    type: generated
+    prompt: |-
+      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name} on a {gpu_name}. Add one short line on energy: {energy_kwh_per_1M} kWh per 1M generated tokens, about {cost_eur_per_1m} € at 0.25 €/kWh. Then include the following exact Markdown metric table (tuned llama.cpp configuration):
+
+      | Metric | 512 Context | 8k Context | 32k Context | Max Context ({max_context}) |
+      | --- | --- | --- | --- | --- |
+      | Prompt Processing (tok/s) | {prefill_512_tps} | {prefill_8k_tps} | {prefill_32k_tps} | {prefill_max_context_tps} |
+      | TTFT | {ttft_512_ms} ms | {ttft_8k_ms} ms | {ttft_32k_ms} ms | {ttft_max_context_ms} ms |
+      | Generation (tok/s) | {decode_512_tps} | {decode_8k_tps} | {decode_32k_tps} | {decode_max_context_tps} |
+  - id: decode-ladder-intro
+    title: Generation Speed vs Context
+    type: generated
+    prompt: Write a 2-3 sentence plain-language chapeau for a section about how fast {model_name} writes its answers, and how that speed changes as the prompt gets longer. Explain that the chart compares Ollama out of the box against llama.cpp — stock, with Ollama's own flags, and tuned — all running the exact same model file. No numbers yet.
+  - id: decode-ladder-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    notes: |-
+      seriesLabels keys must match the series' comma-joined role list exactly. On datasets where a
+      role is merged with another (e.g. "best:flash_attn=on, tuned:min_ttft"), add the joined key.
+    chart:
+      arrayPath: series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
+      chartType: line
+      xPath: prompt_tokens
+      yKeys:
+        - decode_tps.median
+      seriesLabels:
+        defaults: Ollama (stock)
+        reference:ollama-defaults: llama.cpp (Ollama's flags)
+        baseline: llama.cpp (stock)
+        tuned:max_throughput: llama.cpp (tuned)
+      title: Decode speed vs context size
+      xLabel: prompt tokens in context
+      yLabel: decode tok/s (median)
+      roundXToPowerOf2: true
+  - id: decode-ladder-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (3-4 sentences) analysing the decode speed chart above, using the data table below. Key numbers: tuned llama.cpp decodes at {decode_512_tps} tok/s at 512-token context versus {decode_512_ollama_tps} tok/s for stock Ollama; {decode_8k_tps} tok/s at 8k; {decode_32k_tps} tok/s at 32k. Comment on the size of the gap between the runtimes and on how much speed is lost as context deepens. Add one short sentence on whether llama.cpp with Ollama's own flags closes the gap (which tells us whether the difference is flags or the runtime itself)."
+    dataPaths:
+      - series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
+  - id: prefill-intro
+    title: Prompt Processing Speed
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: before a model writes anything it must first read the prompt (this is called prefill), and this reading speed decides how usable the model is on big documents. The chart compares the same configurations as above. No numbers yet."
+  - id: prefill-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    chart:
+      arrayPath: series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
+      chartType: line
+      xPath: prompt_tokens
+      yKeys:
+        - prefill_tps.median
+      seriesLabels:
+        defaults: Ollama (stock)
+        reference:ollama-defaults: llama.cpp (Ollama's flags)
+        baseline: llama.cpp (stock)
+        tuned:max_throughput: llama.cpp (tuned)
+      title: Prompt processing speed vs context size
+      xLabel: prompt tokens in context
+      yLabel: prefill tok/s (median)
+      roundXToPowerOf2: true
+  - id: prefill-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (2-3 sentences) analysing the prefill chart above, using the data table below. Key numbers for tuned llama.cpp: {prefill_512_tps} tok/s at 512 tokens, {prefill_8k_tps} tok/s at 8k, {prefill_32k_tps} tok/s at 32k. End with one concrete sentence about what this means for feeding long documents or codebases to the model."
+    dataPaths:
+      - series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
+  - id: ttft-intro
+    title: Time to First Token
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: TTFT is the wait between hitting enter and seeing the first word appear — the number that makes a model feel snappy or sluggish. It grows with the prompt because the whole prompt must be processed first. No numbers yet."
+  - id: ttft-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    chart:
+      arrayPath: series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
+      chartType: line
+      xPath: prompt_tokens
+      yKeys:
+        - ttft_ms.median
+      seriesLabels:
+        defaults: Ollama (stock)
+        reference:ollama-defaults: llama.cpp (Ollama's flags)
+        baseline: llama.cpp (stock)
+        tuned:max_throughput: llama.cpp (tuned)
+      title: Time to first token vs context size
+      xLabel: prompt tokens in context
+      yLabel: TTFT (ms, median)
+      roundXToPowerOf2: true
+  - id: ttft-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (3-4 sentences) analysing the TTFT chart above, using the data table below. Key numbers for tuned llama.cpp: {ttft_512_ms} ms at 512 tokens, {ttft_2k_ms} ms at 2k, {ttft_8k_ms} ms at 8k, {ttft_32k_ms} ms at 32k, and {ttft_max_context_ms} ms at the maximum context. Frame the numbers at human scale (instant, a pause, a coffee-sip wait). One short sentence comparing against Ollama's first-token latency at 512 tokens ({ttft_512_ollama_ms} ms)."
+    dataPaths:
+      - series[role=defaults|reference:ollama-defaults|baseline|tuned:max_throughput].prefill_curve
+  - id: context-limit-intro
+    title: Pushing Context to the Limit
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: context is how much text the model can hold at once (a whole report, a codebase), and we kept doubling it until the card ran out of memory or the model hit its own ceiling. The chart shows how generation speed holds up on the way there, for flash attention on, off, a compressed (quantized) KV cache, and Ollama. No numbers yet."
+  - id: context-limit-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    notes: |-
+      full_points[output_tokens=64] is the deep-context ladder (output fixed at 64). Rung positions
+      are odd numbers (ctx - 320), hence roundXToPowerOf2. Failed rungs (OOM) have null metrics and
+      simply drop out of the line.
+    chart:
+      arrayPath: series[role=best:flash_attn=on|best:flash_attn=off|tuned:max_context|defaults].full_points[output_tokens=64]
+      chartType: line
+      xPath: ctx
+      yKeys:
+        - decode_tps.median
+      seriesLabels:
+        best:flash_attn=on, tuned:min_ttft: llama.cpp fa on (f16 KV)
+        best:flash_attn=on: llama.cpp fa on (f16 KV)
+        best:flash_attn=off: llama.cpp fa off
+        tuned:max_context: llama.cpp fa on (q4/q4 KV)
+        defaults: Ollama (stock)
+      title: Decode speed up to the context ceiling
+      xLabel: context size (tokens)
+      yLabel: decode tok/s (median)
+      roundXToPowerOf2: true
+  - id: context-limit-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (3-4 sentences) analysing the context-ceiling chart above, using the data below. Key facts: the max-context configuration (quantized q4/q4 KV cache + flash attention) reaches {max_context} tokens; decode speed at the deepest measured context is {decode_max_context_tps} tok/s; with flash attention off, the first out-of-memory hit at {first_oom_faoff} tokens. Explain what limits each curve (VRAM for fa-off, the parameter-space cap otherwise) and what the speed at depth means in practice."
+    dataPaths:
+      - series[role=tuned:max_context].max_context
+      - series[role=best:flash_attn=off].max_context
+  - id: vram-intro
+    title: VRAM Footprint
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: the graphics card has a fixed amount of memory, and every extra token of context eats a bit more of it — this chart shows exactly how much, and why compressing the KV cache buys headroom. No numbers yet."
+  - id: vram-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    chart:
+      arrayPath: series[role=best:flash_attn=on|best:flash_attn=off|tuned:max_context|defaults].full_points
+      chartType: bar
+      xPath: ctx
+      yKeys:
+        - peak_vram_mb
+      seriesLabels:
+        best:flash_attn=on, tuned:min_ttft: llama.cpp fa on (f16 KV)
+        best:flash_attn=on: llama.cpp fa on (f16 KV)
+        best:flash_attn=off: llama.cpp fa off
+        tuned:max_context: llama.cpp fa on (q4/q4 KV)
+        defaults: Ollama (stock)
+      title: Peak VRAM vs context size
+      xLabel: context size (tokens)
+      yLabel: peak VRAM (MB)
+      roundXToPowerOf2: true
+  - id: vram-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (3-4 sentences) analysing the VRAM chart above, using the data below. Key facts: the card has {gpu_vram_mb} MB of VRAM; the max-context configuration (q4/q4 KV cache) peaks at {peak_vram_max_ctx_mb} MB at its deepest context of {max_context} tokens; the flash-attention-off configuration went out of memory at {first_oom_faoff} tokens. Comment on the slope of each curve and how much context headroom KV-cache quantization buys on a 16 GB card."
+    dataPaths:
+      - series[role=tuned:max_context].full_points[max:ctx]
+      - series[role=best:flash_attn=on].full_points[max:ctx]
+      - series[role=best:flash_attn=off].full_points[max:ctx]
+  - id: tuning-sweep-intro
+    title: Does Tuning Matter? 96 Configs Later
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: we swept the classic llama.cpp knobs — batch size, micro-batch size and thread count — across every KV-cache format, nearly a hundred configurations, all on the same 4k-context workload. The chart shows what that tuning effort actually bought. No numbers yet."
+  - id: tuning-sweep-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    notes: |-
+      The pareto key is "<runtime>/<artifact>" and is dataset-specific. Both artifact variants of
+      the current corpus are listed; a sub-path that doesn't exist resolves to nothing and is
+      skipped. Update the key if the llama.cpp build or artifact name changes.
+      Points are filtered to flash_attn=on so the KV families stay clean; repeated measurements at
+      the same batch size average into one point per KV family — the flatness of each line versus
+      the gap between lines IS the story.
+    chart:
+      arrayPath: pareto[llama.cpp@b10068/gguf-Q4_K_M].points[config.flash_attn=on], pareto[llama.cpp@b10068/gguf-UD-Q4_K_M].points[config.flash_attn=on]
+      chartType: bar
+      xPath: config.batch_size
+      seriesPath: config.kv_type_k
+      yKeys:
+        - decode_tps.median
+      seriesLabels:
+        f16: KV f16
+        q8_0: KV q8_0
+        q4_0: KV q4_0
+      title: Decode speed across the tuning sweep (4k context, fa on)
+      xLabel: batch size
+      yLabel: decode tok/s (median)
+      roundXToPowerOf2: true
+  - id: tuning-sweep-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (3-4 sentences) analysing the tuning-sweep chart above, using the data table below (one row per swept configuration: batch/ubatch/threads knobs and the resulting decode speed at 4k context). Two things to establish, with numbers: how flat decode speed is WITHIN one KV-cache family across all batch/ubatch/thread combinations (compare min and max), and how large the gap is BETWEEN KV families (f16 vs q8_0 vs q4_0). Conclude in one sentence: which knob is worth touching and which are not."
+    dataPaths:
+      - pareto[llama.cpp@b10068/gguf-Q4_K_M].points[config.flash_attn=on], pareto[llama.cpp@b10068/gguf-UD-Q4_K_M].points[config.flash_attn=on]
+  - id: energy-intro
+    title: Energy & What It Costs
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: every token generated costs electricity, and we measured it at the wall socket with a smart plug — the whole computer, not just the graphics card. The chart compares how many joules each configuration burns to generate a thousand tokens. No numbers yet."
+  - id: energy-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    notes: |-
+      x = _seriesName renders one category per configuration (their role names). The two yKeys mirror
+      the board's outer/inner bars: whole-box wall energy vs GPU-only energy.
+    chart:
+      arrayPath: series[role=defaults|baseline|tuned:max_throughput|tuned:max_context]
+      chartType: bar
+      xPath: _seriesName
+      yKeys:
+        - translations.energy.j_per_1k_gen
+        - translations.energy.j_per_1k_gen_gpu
+        - translations.energy.j_per_1k_gen_cpu
+      seriesLabels:
+        translations.energy.j_per_1k_gen: at the wall
+        translations.energy.j_per_1k_gen_gpu: GPU only
+        translations.energy.j_per_1k_gen_cpu: CPU only
+      title: Energy per 1k generated tokens
+      xLabel: configuration
+      yLabel: J per 1k generated tokens
+  - id: energy-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (3-4 sentences) analysing the energy chart above. Key numbers: tuned llama.cpp burns {energy_j_per_1k} J per 1k generated tokens at the wall ({energy_j_per_1k_gpu} J GPU-only) versus {energy_j_per_1k_ollama} J for stock Ollama; average wall draw during an 8k-prompt run is {wall_w_mean} W. Translate to money in one sentence: {energy_kwh_per_1M} kWh per million tokens is about {cost_eur_per_1m} € at 0.25 €/kWh. Note in one short sentence what the gap between wall and GPU-only numbers says about the rest of the box."
+    dataPaths:
+      - series[role=defaults|baseline|tuned:max_throughput|tuned:max_context].translations.energy
+  - id: coldstart-intro
+    title: Cold Start
+    type: generated
+    prompt: "Write a 2-3 sentence plain-language chapeau: before the very first answer, the model has to be loaded from disk into the graphics card — the cold start. This matters for services that unload the model when idle. The chart compares how long each runtime takes to get ready. No numbers yet."
+  - id: coldstart-chart
+    title: ""
+    type: data-chart
+    prompt: ""
+    chart:
+      arrayPath: series[role=defaults|tuned:max_throughput]
+      chartType: bar
+      xPath: runtime
+      yKeys:
+        - load_time_s.median
+      seriesLabels:
+        defaults: Ollama
+        tuned:max_throughput: llama.cpp (tuned)
+      title: Model load time, cold to ready
+      xLabel: runtime
+      yLabel: load time (s, median)
+  - id: coldstart-analysis
+    title: ""
+    type: generated
+    prompt: "Write a short technical paragraph (2-3 sentences) analysing the cold-start chart above. Key numbers: tuned llama.cpp loads in {load_time_s} s versus {load_time_ollama_s} s for Ollama; once loaded, the first token after a 512-token prompt takes {ttft_512_ms} ms on llama.cpp and {ttft_512_ollama_ms} ms on Ollama. Conclude in one sentence what this means for on-demand serving versus a model kept warm."
+  - id: human-units
+    title: What This Means in Practice
+    type: generated
+    prompt: |-
+      Write 2-3 plain-language sentences turning the benchmark into daily-life terms: summarising a 100-page PDF, how fast the model reads its own answer back compared to a human, and what a million tokens costs in electricity. Then include the following exact Markdown table:
+
+      | Task | Result |
+      | --- | --- |
+      | Read a 100-page PDF ({max_context} context, fits: {pdf_fits}) | {pdf_read_s} s |
+      | Write the summary | {pdf_write_s} s |
+      | Total | {pdf_total_s} s |
+      | Generates text at | {reading_wps} words/s ({x_human_reading}x human reading speed) |
+      | Electricity per 1M generated tokens | {cost_eur_per_1m} € |
+  - id: verdict-block
+    title: Verdict
+    type: generated
+    prompt: "Write a plain-language conclusion paragraph (4-5 sentences) about the usability of {model_name} on a budget computer with a {gpu_name}. The verdict is: {verdict}. Ground it in the measured range: first token in {ttft_512_ms} ms at best, generation from {decode_512_tps} tok/s down to {decode_max_context_tps} tok/s at the {max_context}-token ceiling, {energy_kwh_per_1M} kWh per million tokens. Use one real-world comparison. Be honest about the limits as well as the strengths."
+  - id: further-reading
+    title: Further Reading
+    type: generated
+    prompt: |-
+      - Add a placeholder link to the short 5-minute article about this model.
+      - Add a placeholder link to the previous article of the series.
+      - Add a placeholder link to the next article of the series.
