@@ -1,6 +1,10 @@
 name: LLM Benchmarks for Devs & Customers
-model: moonshotai/kimi-k2-0905
-systemPrompt: "You are writing a concise, customer-focused LLM inference benchmark post tailored for dev.to. Voice: direct, practical, customer-oriented. Focus on user experience (TTFT), running costs (cost/1M tokens), power draw, and throughput at scaling context sizes. Avoid overly deep low-level compiler jargon; focus on business and developer trade-offs. Keep sentences short and readable."
+model: moonshotai/kimi-k2
+systemPrompt: |-
+  Avoid developer specific jargon and benchmarking vocabulary. the audience are people that just have 5 minutes to read an article that goes to the point.
+  Keep the vocabulaire focus and don't extrapolate
+
+  don't generate title or markdown output. don't use bullet list unless specified, dont generate markdown table unless specified
 siteRepo: lcances/llmbench-site
 categories:
   - ai
@@ -143,6 +147,21 @@ dataSchema:
       - Not Recommended
       - Custom...
 blocks:
+  - id: 7ab1d566-01df-4a32-bf3a-b50176065329
+    title: ""
+    type: generated
+    prompt: |-
+      Write a very small introduction of the model and the expected capacity. the model we are benchmarking is : {model_name}
+
+      for reference
+      - very small models (<2B) are useful for tasks that require speed 
+      (routing, safe guard, monitoring, reranking)
+      - small model (<8B) can be interesting to run on mobile or on edge
+      - dense medium size model (10B <> 27B) start to be interesting for analysing and general knowledge
+      - dense medium MoE (35B a3b) are interesting to VRAM constraint system and more specialized
+    notes: "{model name } - Inference Speed Breakdown"
+    dataPaths:
+      - schema
   - id: config-summary
     title: Configuration & Setup
     type: generated
@@ -163,34 +182,32 @@ blocks:
     title: Straight to the Results
     type: generated
     prompt: |-
-      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Then include the following exact Markdown metric comparison table:
+      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Write one small line about the energy consumption in kWh for 1M token. Here the energy in J and 1k token = {energy_j_per_1k}. Then include the following exact Markdown metric comparison table:
 
       | Metric | 512 Context | 32k Context | Max Context ({max_context}) |
       | --- | --- | --- | --- |
       | Prompt Processing (tok/s) | {prefill_512_tps} | {prefill_32k_tps} | {prefill_max_context_tps} |
       | TTFT (ms) | {ttft_512_ms} | {ttft_32k_ms} | {ttft_max_context_ms} |
       | Decode Speed (tok/s) | {decode_512_tps} | {decode_32k_tps} | {decode_max_context_tps} |
-      | Cost (€/1M tok) | {cost_eur_per_1m} | {cost_eur_per_1m} | {cost_eur_per_1m} |
-  - id: bottom-line
-    title: Customer Verdict
-    type: generated
-    prompt: "Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Highlight what customers care about most: interactive responsiveness ({ttft_512_ms}ms TTFT), generation speed ({decode_tps} tok/s), prompt processing speed at max context ({prefill_max_context_tps} tok/s), and wall power cost ({cost_eur_per_1m}€/1M tokens)."
-  - id: power-and-cost
-    title: Power & Cost per 1M Tokens
-    type: generated
-    prompt: Write 1 short paragraph analyzing power draw ({wall_w_mean}W wall draw, {energy_j_per_1k} J/1k tokens) and total electricity cost ({cost_eur_per_1m}€ per 1M generated tokens) for running {model_name}. Compare with the previous issue’s {prev.model_name} ({prev.cost_eur_per_1m}€/1M tok).
-  - id: latency-ttft
-    title: TTFT Latency Scaling
-    type: generated
-    prompt: Write 1 short paragraph analyzing TTFT latency scaling from 512 tokens ({ttft_512_ms}ms, {prefill_512_tps} tok/s prefill) up to 8k ({ttft_8k_ms}ms) and 32k tokens ({ttft_32k_ms}ms).
-  - id: generation-speed
-    title: Generation Speed (tok/s)
-    type: generated
-    prompt: Write 1 short paragraph analyzing generation speed from 512 tokens prompt context ({decode_512_tps} tok/s, {reading_wps} words/s) down to 32k tokens context ({decode_32k_tps} tok/s).
+
+
+      If there is duration, choose the best unit for it (for example: 245 ms -> 235 ms, 45689 ms -> 46s)
+      of a value have multiple digit, round to the nearest integer (no comma)
   - id: context-table
-    title: Context Scaling Table
-    type: data-table
+    title: Decode speed at context size
+    type: data-chart
     prompt: ""
+    notes: |2-
+       Role                                                                              │ Description
+        ───────────────────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────
+         baseline                                                                          │ Stock llama.cpp defaults (Flash Attention OFF, f16 KV cache, default batching).
+         best:flash_attn=on                                                                │ Best performing run with Flash Attention enabled.
+         best:flash_attn=off                                                               │ Best performing run with Flash Attention disabled.
+         tuned:max_throughput                                                              │ Swept & tuned batch/thread knobs for maximum tokens/sec.
+         tuned:min_ttft                                                                    │ Swept & tuned for lowest Time-To-First-Token latency.
+         tuned:max_context                                                                 │ Quantized KV cache (e.g. q4_0) + Flash Attention to maximize usable context.
+         reference:ollama-defaults                                                         │ llama.cpp running the exact CLI flags Ollama passes (-fa auto -b 512 -ub 512 -t 4).
+         defaults                                                                          │ The actual Ollama runtime instance with stock configuration.
     table:
       arrayPath: series[role=tuned:max_throughput].prefill_curve
       columns:
@@ -204,3 +221,30 @@ blocks:
           path: decode_tps.median
         - label: Wall Power (W)
           path: wall_w_mean
+    chart:
+      arrayPath: series[role=defaults|reference:ollama-defaults|best:flash_attn=on].full_points
+      chartType: bar
+      xPath: prompt_tokens
+      yKeys:
+        - decode_tps.median
+      seriesLabels:
+        baseline: ollama -auto
+        reference:ollama-defaults: ollama defaults
+        defaults: llama.cpp default
+        best:flash_attn=on, tuned:min_ttft: llama.cpp tuned
+      yLabel: tok/s
+      xLabel: context size
+      roundXToPowerOf2: true
+  - id: generation-speed
+    title: ""
+    type: generated
+    prompt: |-
+      Here some values:
+      at 512 token context, the decode speed is {decode_512_tps}, the prompt processing speed is {prefill_512_tps}
+      at 32k token context, the decode speed is {decode_32k_tps}, the prompt processing speed is {prefill_32k_tps}
+      at max context ({max_context}) the decode speed is {decode_max_context_tps}, the prompt processing speed is {prefill_max_context_tps}
+
+
+
+      Write a small paragraph analysing the decode speed. In a very short sentence, comment on the prompt processing speed
+      Conclude in casual term compare it to human reading speed
