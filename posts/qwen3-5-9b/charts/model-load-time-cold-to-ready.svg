@@ -1,0 +1,46 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="14" font-weight="600" fill="#111827" font-family="sans-serif">Model load time, cold to ready</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif">runtime</text>
+  <text x="18" y="165" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">load time (s, median)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="237" x2="615" y2="237" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="241" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">1.2</text>
+    
+      <line x1="70" y1="189" x2="615" y2="189" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="193" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">2.4</text>
+    
+      <line x1="70" y1="141" x2="615" y2="141" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="145" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">3.6</text>
+    
+      <line x1="70" y1="93" x2="615" y2="93" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="97" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">4.8</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">6</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="206.25" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 206.25 303)">llama.cpp@b10068</text>
+    
+        <rect x="170.25" y="233.84" width="35" height="51.16" fill="#4f46e5" rx="3" ry="3">
+          <title>llama.cpp@b10068 (tuned:max_throughput, tuned:min_ttft): 1.28</title>
+        </rect>
+      
+      <text x="478.75" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 478.75 303)">ollama@v0.32.1</text>
+    
+        <rect x="478.75" y="93.52000000000001" width="35" height="191.48" fill="#059669" rx="3" ry="3">
+          <title>ollama@v0.32.1 (Ollama): 4.79</title>
+        </rect>
+      
+  
+      <rect x="411" y="29" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="425" y="38" font-size="11" fill="#4b5563" font-family="sans-serif">tuned:max_throu…</text>
+    
+      <rect x="548" y="29" width="10" height="10" fill="#059669" rx="2" />
+      <text x="562" y="38" font-size="11" fill="#4b5563" font-family="sans-serif">Ollama</text>
+    
+</svg>

@@ -1,0 +1,52 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="14" font-weight="600" fill="#111827" font-family="sans-serif">Energy per 1M generated tokens (at the wall)</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif">configuration</text>
+  <text x="18" y="165" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">kWh per 1M generated tokens</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="237" x2="615" y2="237" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="241" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">0.4</text>
+    
+      <line x1="70" y1="189" x2="615" y2="189" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="193" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">0.8</text>
+    
+      <line x1="70" y1="141" x2="615" y2="141" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="145" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">1.2</text>
+    
+      <line x1="70" y1="93" x2="615" y2="93" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="97" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">1.6</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">2</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="138.125" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 138.125 303)">baseline</text>
+    
+        <rect x="120.125" y="165.3228" width="35" height="119.6772" fill="#4f46e5" rx="3" ry="3">
+          <title>baseline (translations.energy.kwh_per_1m_gen): 1</title>
+        </rect>
+      
+      <text x="274.375" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 274.375 303)">defaults</text>
+    
+        <rect x="256.375" y="162.6468" width="35" height="122.35319999999999" fill="#4f46e5" rx="3" ry="3">
+          <title>defaults (translations.energy.kwh_per_1m_gen): 1.02</title>
+        </rect>
+      
+      <text x="410.625" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 410.625 303)">tuned:max_conte…</text>
+    
+        <rect x="392.625" y="164.96999999999997" width="35" height="120.03000000000002" fill="#4f46e5" rx="3" ry="3">
+          <title>tuned:max_context (translations.energy.kwh_per_1m_gen): 1</title>
+        </rect>
+      
+      <text x="546.875" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 546.875 303)">tuned:max_throu…</text>
+    
+        <rect x="528.875" y="166.71359999999999" width="35" height="118.2864" fill="#4f46e5" rx="3" ry="3">
+          <title>tuned:max_throughput, tuned:min_ttft (translations.energy.kwh_per_1m_gen): 0.99</title>
+        </rect>
+      
+  
+</svg>
