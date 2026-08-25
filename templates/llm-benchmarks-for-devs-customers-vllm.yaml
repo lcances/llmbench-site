@@ -1,0 +1,311 @@
+name: LLM Benchmarks for Devs & Customers (vLLM)
+model: moonshotai/kimi-k2
+systemPrompt: |-
+  Avoid developer specific jargon and benchmarking vocabulary. the audience are people that just have 5 minutes to read an article that goes to the point.
+  Keep the vocabulaire focus and don't extrapolate
+
+  BANNED WORD
+  skewing, 
+
+  don't generate title or markdown output. don't use bullet list unless specified, dont generate markdown table unless specified
+siteRepo: lcances/llmbench-site
+categories:
+  - ai
+  - llm
+  - benchmark
+  - devops
+dataSchema:
+  - key: model_name
+    label: Model Name
+    type: text
+    path: model
+  - key: hw_profile
+    label: Hardware Profile
+    type: text
+    path: hw_profile
+  - key: gpu_name
+    label: GPU Model
+    type: text
+    path: env.gpus[0].name
+  - key: gpu_power_limit_w
+    label: GPU Power Limit
+    type: number
+    unit: W
+    path: env.gpus[0].power_limit_w
+  - key: runtime_engine
+    label: Runtime Engine
+    type: text
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].runtime
+  - key: artifact
+    label: Quantization / Artifact
+    type: text
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].artifact
+  - key: load_time_s
+    label: Model Load Time
+    type: number
+    unit: s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].load_time_s.median
+  - key: wall_w_mean
+    label: Average Wall Power Draw
+    type: number
+    unit: W
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=8192].wall_w_mean
+  - key: energy_j_per_1k
+    label: Energy Consumption
+    type: number
+    unit: J/1k tok
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].translations.energy.j_per_1k_gen
+  - key: energy_kwh_per_1M
+    label: Energy Consumption
+    type: number
+    unit: kWh/1M tok
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].translations.energy.kwh_per_1m_gen
+  - key: cost_eur_per_1m
+    label: Power Cost / 1M Tokens
+    type: number
+    unit: €/1M tok
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].translations.energy.eur_per_1m_gen
+  - key: ttft_512_ms
+    label: TTFT (512 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=512].ttft_ms.median
+  - key: ttft_2k_ms
+    label: TTFT (2,048 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=2048].ttft_ms.median
+  - key: ttft_8k_ms
+    label: TTFT (8,192 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=8192].ttft_ms.median
+  - key: ttft_32k_ms
+    label: TTFT (32,768 tokens)
+    type: number
+    unit: ms
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=32768].ttft_ms.median
+  - key: prefill_512_tps
+    label: Prefill Speed (512t)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=512].prefill_tps.median
+  - key: prefill_8k_tps
+    label: Prefill Speed (8k)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=8192].prefill_tps.median
+  - key: prefill_32k_tps
+    label: Prefill Speed (32k)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=32768].prefill_tps.median
+  - key: prefill_max_context_tps
+    label: Prefill Speed (Max Context)
+    type: number
+    unit: tok/s
+    path: series[role=best:flash_attn=on].full_points[max:ctx].prefill_tps.median
+  - key: ttft_max_context_ms
+    label: TTFT (Max Context)
+    type: number
+    unit: ms
+    path: series[role=best:flash_attn=on].full_points[max:ctx].ttft_ms.median
+  - key: decode_512_tps
+    label: Generation Speed (512t prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=512].decode_tps.median
+  - key: decode_8k_tps
+    label: Generation Speed (8k prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=8192].decode_tps.median
+  - key: decode_32k_tps
+    label: Generation Speed (32k prompt)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve[prompt_tokens=32768].decode_tps.median
+  - key: decode_max_context_tps
+    label: Generation Speed (Max Context)
+    type: number
+    unit: tok/s
+    path: series[role=best:flash_attn=on].full_points[max:ctx].decode_tps.median
+  - key: decode_tps
+    label: Decode Speed (1k gen)
+    type: number
+    unit: tok/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].decode_curve[output_tokens=1024].decode_tps.median
+  - key: max_context
+    label: Max Context Supported
+    type: number
+    unit: tokens
+    path: series[role=tuned:max_context&runtime^=llama.cpp].translations.pdf_summary.max_context
+  - key: reading_wps
+    label: Reading Speed
+    type: number
+    unit: words/s
+    path: series[role=tuned:max_throughput&runtime^=llama.cpp].translations.reading.words_per_s
+  - key: vllm_total_tps_c1
+    label: Total Throughput (1 request, vLLM)
+    type: number
+    unit: tok/s
+    path: series[role=baseline&runtime^=vllm].batched_curve[concurrency=1].total_tps.median
+  - key: vllm_total_tps_c32
+    label: Total Throughput (32 requests, vLLM)
+    type: number
+    unit: tok/s
+    path: series[role=baseline&runtime^=vllm].batched_curve[concurrency=32].total_tps.median
+  - key: vllm_req_ttft_c32_ms
+    label: Per-Request TTFT (32 requests, vLLM)
+    type: number
+    unit: ms
+    path: series[role=baseline&runtime^=vllm].batched_curve[concurrency=32].req_ttft_ms.median
+  - key: verdict
+    label: Verdict
+    type: select
+    options:
+      - Great for Production
+      - Good for Internal Tools
+      - Niche / Heavy Requirements
+      - Not Recommended
+      - Custom...
+blocks:
+  - id: 7ab1d566-01df-4a32-bf3a-b50176065329
+    title: ""
+    type: generated
+    prompt: |-
+      Write a very small introduction of the model and the expected capacity. the model we are benchmarking is : {model_name}
+
+      for reference
+      - very small models (<2B) are useful for tasks that require speed 
+      (routing, safe guard, monitoring, reranking)
+      - small model (<8B) can be interesting to run on mobile or on edge
+      - dense medium size model (10B <> 27B) start to be interesting for analysing and general knowledge
+      - dense medium MoE (35B a3b) are interesting to VRAM constraint system and more specialized
+    notes: "{model name } - Inference Speed Breakdown"
+    dataPaths:
+      - schema
+  - id: config-summary
+    title: Configuration & Setup
+    type: generated
+    prompt: |-
+      Write two short sentences explaining that during the entire series, the hardware is not going to change. That will make the result more comparable between different series of model
+
+      create a markdown table that contain the following information
+      - cpu: Intel Core Ultra 7 265K
+      - motherboard: ASUS ROG MAXIMUS Z890 APEX Hovedkort - Intel Z890
+      - ram: Kingston FURY Beast DDR5-5600 - 64GB (32 Gb)
+      - gpu: MSI GeForce RTX 5060 Ti  (16 Gb GDDR7)
+      - system: {os}
+      - llama.cpp version: {runtime_engine}
+      - ollama version: ollama@v0.32.1
+    dataPaths:
+      - env.os
+  - id: straight-to-results
+    title: Straight to the Results
+    type: generated
+    prompt: |-
+      Write 2 concise sentences summarizing the verdict ({verdict}) for {model_name}. Write one small line about the energy consumption in kWh for 1M token ({energy_kwh_per_1M}). Then include the following exact Markdown metric comparison table:
+
+      | Metric | 512 Context | 32k Context | Max Context ({max_context}) |
+      | --- | --- | --- | --- |
+      | Prompt Processing (tok/s) | {prefill_512_tps} | {prefill_32k_tps} | {prefill_max_context_tps} |
+      | TTFT (ms) | {ttft_512_ms} | {ttft_32k_ms} | {ttft_max_context_ms} |
+      | Decode Speed (tok/s) | {decode_512_tps} | {decode_32k_tps} | {decode_max_context_tps} |
+
+
+      If there is duration, choose the best unit for it (for example: 245 ms -> 235 ms, 45689 ms -> 46s)
+      of a value have multiple digit, round to the nearest integer (no comma)
+  - id: context-table
+    title: Decode speed at context size
+    type: data-chart
+    prompt: ""
+    notes: |-
+      Role                                                                              │ Description
+        ───────────────────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────
+         baseline                                                                          │ Stock llama.cpp defaults (Flash Attention OFF, f16 KV cache, default batching).
+         best:flash_attn=on                                                                │ Best performing run with Flash Attention enabled.
+         best:flash_attn=off                                                               │ Best performing run with Flash Attention disabled.
+         tuned:max_throughput                                                              │ Swept & tuned batch/thread knobs for maximum tokens/sec.
+         tuned:min_ttft                                                                    │ Swept & tuned for lowest Time-To-First-Token latency.
+         tuned:max_context                                                                 │ Quantized KV cache (e.g. q4_0) + Flash Attention to maximize usable context.
+         reference:ollama-defaults                                                         │ llama.cpp running the exact CLI flags Ollama passes (-fa auto -b 512 -ub 512 -t 4).
+         defaults                                                                          │ The actual Ollama runtime instance with stock configuration.
+    table:
+      arrayPath: series[role=tuned:max_throughput&runtime^=llama.cpp].prefill_curve
+      columns:
+        - label: Prompt Tokens
+          path: prompt_tokens
+        - label: TTFT (ms)
+          path: ttft_ms.median
+        - label: Prefill (tok/s)
+          path: prefill_tps.median
+        - label: Decode (tok/s)
+          path: decode_tps.median
+        - label: Wall Power (W)
+          path: wall_w_mean
+    chart:
+      arrayPath: series[role=defaults|reference:ollama-defaults|best:flash_attn=on].full_points
+      chartType: bar
+      xPath: prompt_tokens
+      yKeys:
+        - decode_tps.median
+      seriesLabels:
+        baseline: ollama -auto
+        reference:ollama-defaults: ollama defaults
+        defaults: llama.cpp default
+        best:flash_attn=on, tuned:min_ttft: llama.cpp tuned
+      yLabel: tok/s
+      xLabel: context size
+      roundXToPowerOf2: true
+  - id: generation-speed
+    title: ""
+    type: generated
+    prompt: |-
+      Here some values:
+      at 512 token context, the decode speed is {decode_512_tps}, the prompt processing speed is {prefill_512_tps}
+      at 32k token context, the decode speed is {decode_32k_tps}, the prompt processing speed is {prefill_32k_tps}
+      at max context ({max_context}) the decode speed is {decode_max_context_tps}, the prompt processing speed is {prefill_max_context_tps}
+
+
+      Write a small paragraph analysing the decode speed. In a very short sentence, comment on the prompt processing speed
+  - id: vllm-serving-chart
+    title: When Many People Use It at Once
+    type: data-chart
+    prompt: ""
+    notes: |-
+      vLLM concurrency sweep — only on datasets that include the vLLM setup; delete both vllm-*
+      blocks for models without it. The vLLM series reuse the llama.cpp role names, hence the
+      &runtime^=vllm condition.
+    chart:
+      arrayPath: series[role=baseline&runtime^=vllm].batched_curve
+      chartType: bar
+      xPath: concurrency
+      yKeys:
+        - total_tps.median
+      title: Total words produced per second vs simultaneous users
+      xLabel: people using it at the same time
+      yLabel: total tok/s
+  - id: vllm-serving
+    title: ""
+    type: generated
+    prompt: |-
+      Write a small paragraph (3-4 sentences) about serving several people at once, for a non-technical reader. So far every number was measured for one person using the model alone. With a server program built for sharing (vLLM), the same computer serves 32 people at the same time: together they receive {vllm_total_tps_c32} tokens per second instead of {vllm_total_tps_c1} for one person alone, and each of the 32 still starts seeing an answer after about {vllm_req_ttft_c32_ms} ms. Close with one plain sentence on what that means: one budget computer can back a whole team or a small product, not just one user.
+
+      If there is a duration, choose the best unit for it (for example: 601 ms -> 0.6 s). If a value has multiple digits, round to the nearest integer (no comma).
+  - id: a6122d19-f8b0-414d-86b1-ff9856a9be96
+    title: Conclusion
+    type: generated
+    prompt: |-
+      Write a small conclusion paragraph about the usablity of {model_name} on a budget computer with a {gpu_name}. Use real world comparison.
+
+      fastest reponse time is {ttft_512_ms}, slowest is ttft_max_context_ms}
+      fastest decoding speed is {decode_512_tps}, slowest is {decode_max_context_tps}.
+      energy consumption in kWh for 1M token is {energy_kwh_per_1M}
+  - id: 05fe08ae-1c29-4438-9504-279ac276787c
+    title: Further reading
+    type: generated
+    prompt: |-
+      - Add a placeholder link to the complete benchmark article.
+      - Add a placeholder link to the previous article of the series.
+      - Add a placeholder link to the next article of the series.
