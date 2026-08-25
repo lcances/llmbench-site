@@ -1,0 +1,89 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="14" font-weight="600" fill="#111827" font-family="sans-serif">Decode speed across the tuning sweep (4k context, fa on)</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif">batch size</text>
+  <text x="18" y="165" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">decode tok/s (median)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="237" x2="615" y2="237" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="241" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">15.4</text>
+    
+      <line x1="70" y1="189" x2="615" y2="189" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="193" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">30.8</text>
+    
+      <line x1="70" y1="141" x2="615" y2="141" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="145" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">46.2</text>
+    
+      <line x1="70" y1="93" x2="615" y2="93" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="97" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">61.6</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">77</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="70" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 70 303)">256</text>
+    
+      <text x="342.5" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 342.5 303)">1024</text>
+    
+      <text x="615" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 615 303)">8192</text>
+    
+  
+      <path d="M 70 67.14233766233767 L 342.5 66.94168831168832 L 615 66.87922077922082 L 615 285 L 70 285 Z" fill="#4f46e5" fill-opacity="0.08" />
+      <path d="M 70 67.14233766233767 L 342.5 66.94168831168832 L 615 66.87922077922082" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+        <circle cx="70" cy="67.14233766233767" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>256 (KV f16): 69.9</title>
+        </circle>
+      
+        <circle cx="342.5" cy="66.94168831168832" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>1024 (KV f16): 69.96</title>
+        </circle>
+      
+        <circle cx="615" cy="66.87922077922082" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>8192 (KV f16): 69.98</title>
+        </circle>
+      
+      <path d="M 70 75.13324675324674 L 342.5 75.03935064935064 L 615 74.98857142857139 L 615 285 L 70 285 Z" fill="#059669" fill-opacity="0.08" />
+      <path d="M 70 75.13324675324674 L 342.5 75.03935064935064 L 615 74.98857142857139" fill="none" stroke="#059669" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+        <circle cx="70" cy="75.13324675324674" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>256 (KV q4_0): 67.33</title>
+        </circle>
+      
+        <circle cx="342.5" cy="75.03935064935064" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>1024 (KV q4_0): 67.36</title>
+        </circle>
+      
+        <circle cx="615" cy="74.98857142857139" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>8192 (KV q4_0): 67.38</title>
+        </circle>
+      
+      <path d="M 70 68.29402597402597 L 342.5 68.22506493506492 L 615 68.15168831168833 L 615 285 L 70 285 Z" fill="#d97706" fill-opacity="0.08" />
+      <path d="M 70 68.29402597402597 L 342.5 68.22506493506492 L 615 68.15168831168833" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+        <circle cx="70" cy="68.29402597402597" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>256 (KV q8_0): 69.53</title>
+        </circle>
+      
+        <circle cx="342.5" cy="68.22506493506492" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>1024 (KV q8_0): 69.55</title>
+        </circle>
+      
+        <circle cx="615" cy="68.15168831168833" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>8192 (KV q8_0): 69.57</title>
+        </circle>
+      
+  
+      <rect x="400" y="29" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="414" y="38" font-size="11" fill="#4b5563" font-family="sans-serif">KV f16</text>
+    
+      <rect x="467" y="29" width="10" height="10" fill="#059669" rx="2" />
+      <text x="481" y="38" font-size="11" fill="#4b5563" font-family="sans-serif">KV q4_0</text>
+    
+      <rect x="541" y="29" width="10" height="10" fill="#d97706" rx="2" />
+      <text x="555" y="38" font-size="11" fill="#4b5563" font-family="sans-serif">KV q8_0</text>
+    
+</svg>
