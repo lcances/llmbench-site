@@ -7,14 +7,14 @@ image: charts/flagship-decode-light.png
 engine: markdown
 ---
 
-<!-- llmbench:generated:begin meta hash=f29177139456 -->
+<!-- llmbench:generated:begin meta hash=3f3f660eb321 -->
 | Provenance | |
 |---|---|
 | Model | `qwen3.5-0.8b`, unsloth GGUF Q4_K_M |
 | Hardware profile | `budget` — 1x NVIDIA GeForce RTX 5060 Ti, 20 CPU cores |
-| Runtimes | llama.cpp@b10068/gguf-Q4_K_M, ollama@v0.32.1/gguf-Q4_K_M |
+| Runtimes | llama.cpp@b10068/gguf-Q4_K_M, ollama@v0.32.1/gguf-Q4_K_M, vllm@0.27.1/safetensors-BF16 |
 | Benchmark version | `v1` |
-| Results commit | `2722d64` |
+| Results commit | `7f1bc51` |
 <!-- llmbench:generated:end meta -->
 
 <!-- llmbench:commentary:begin intro -->
@@ -117,6 +117,23 @@ Cold start
 *TODO — commentary.*
 <!-- llmbench:commentary:end power-notes -->
 
+<!-- llmbench:generated:begin vllm hash=01e6e17301a6 -->
+## vLLM — the same card, a batching engine
+
+One caveat travels with everything in this section: `vllm@0.27.1` serves the official BF16 safetensors (no AWQ/FP8 exists for the 0.8B), while the two runtimes above run the Q4_K_M GGUF — different weight recipes, so nothing here is a head-to-head. vLLM's story is what neither of them can do at all: many requests at once.
+
+Single-stream it decodes 228.1 tokens/s at a 512-token prompt and prefills at 19.0–27.6 k-tokens/s; the max-context probe completes 262 144 tokens — the probe ran out of parameter range, not memory. The trade is cold start: the engine compiles CUDA graphs on load, 93 s before the first request.
+
+![](charts/vllm-ladder-light.svg){.light-content fig-alt="Two panels: total tokens per second and request time-to-first-token against the number of simultaneous requests"}
+![](charts/vllm-ladder-dark.svg){.dark-content fig-alt="Two panels: total tokens per second and request time-to-first-token against the number of simultaneous requests"}
+
+**Figure 9.** Total throughput and per-request latency against the number of simultaneous requests, stock vLLM defaults: 220 tokens/s alone rises to 2 407 at 32 concurrent requests — 10.9× — while the median request still gets its first token in 602 ms. The dashed line is why single-stream tuning must never choose a batching config: the funnel's own throughput winner carries `max_num_seqs=1` from a noise-level single-stream win, holds 221 tokens/s flat, and makes the median request wait 18.6 s at c=32.
+<!-- llmbench:generated:end vllm -->
+
+<!-- llmbench:commentary:begin vllm-notes -->
+*TODO — commentary.*
+<!-- llmbench:commentary:end vllm-notes -->
+
 <!-- llmbench:generated:begin scoreboard hash=71a49e8e633e -->
 ## The tuning scoreboard
 
@@ -180,7 +197,7 @@ A "page" here is 650 tokens and a summary is 500; reading speed converts tokens 
 *TODO — commentary.*
 <!-- llmbench:commentary:end standout -->
 
-<!-- llmbench:generated:begin repro hash=e9dd77da6a70 -->
+<!-- llmbench:generated:begin repro hash=f8744bb0bda3 -->
 ## Reproducing this
 
 Every number in this post was produced by the pipeline from committed results — none of it is typed by hand. To reproduce:
@@ -188,11 +205,12 @@ Every number in this post was produced by the pipeline from committed results �
 ```
 bench run --model qwen3.5-0.8b --hw-profile budget --runtime llama.cpp@b10068
 bench run --model qwen3.5-0.8b --hw-profile budget --runtime ollama@v0.32.1
+bench run --model qwen3.5-0.8b --hw-profile budget --runtime vllm@0.27.1
 bench analyze --model qwen3.5-0.8b --hw-profile budget
 bench stage qwen3.5-0.8b --hw-profile budget
 ```
 
-Benchmark suite `v1`, results commit `2722d64`. Prompts are cut to exact token counts with the model's own tokenizer and output length is forced, so every configuration processes and generates exactly the same number of tokens. Reported values are medians over repetitions with the inter-quartile spread; out-of-memory outcomes are recorded as data, not discarded.
+Benchmark suite `v1`, results commit `7f1bc51`. Prompts are cut to exact token counts with the model's own tokenizer and output length is forced, so every configuration processes and generates exactly the same number of tokens. Reported values are medians over repetitions with the inter-quartile spread; out-of-memory outcomes are recorded as data, not discarded.
 
 [Open the full board for this model](board.html) — every figure, including the ones that did not make the post.
 <!-- llmbench:generated:end repro -->
