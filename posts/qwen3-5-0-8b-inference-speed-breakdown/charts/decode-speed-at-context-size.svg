@@ -1,0 +1,157 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  
+  <text x="342.5" y="352" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif">context size</text>
+  <text x="18" y="155" text-anchor="middle" font-size="11" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 155)">tok/s</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="233" x2="615" y2="233" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="237" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">80</text>
+    
+      <line x1="70" y1="181" x2="615" y2="181" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="185" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">160</text>
+    
+      <line x1="70" y1="129" x2="615" y2="129" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="133" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">240</text>
+    
+      <line x1="70" y1="77" x2="615" y2="77" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="81" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">320</text>
+    
+      <line x1="70" y1="25" x2="615" y2="25" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="29" text-anchor="end" font-size="11" fill="#6b7280" font-family="sans-serif">400</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="97.25" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 97.25 303)">256</text>
+    
+        <rect x="78.175" y="50.85277500000001" width="11.716666666666667" height="234.147225" fill="#4f46e5" rx="3" ry="3">
+          <title>256 (llama.cpp tuned): 360.23</title>
+        </rect>
+      
+        <rect x="90.89166666666667" y="50.38250000000002" width="11.716666666666667" height="234.61749999999998" fill="#059669" rx="3" ry="3">
+          <title>256 (ollama defaults): 360.95</title>
+        </rect>
+      
+        <rect x="103.60833333333333" y="98.56277499999999" width="11.716666666666667" height="186.437225" fill="#d97706" rx="3" ry="3">
+          <title>256 (llama.cpp default): 286.83</title>
+        </rect>
+      
+      <text x="151.75" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 151.75 303)">512</text>
+    
+        <rect x="132.675" y="48.88685000000001" width="11.716666666666667" height="236.11315" fill="#4f46e5" rx="3" ry="3">
+          <title>512 (llama.cpp tuned): 363.25</title>
+        </rect>
+      
+        <rect x="145.39166666666668" y="49.11500000000004" width="11.716666666666667" height="235.88499999999996" fill="#059669" rx="3" ry="3">
+          <title>512 (ollama defaults): 362.9</title>
+        </rect>
+      
+        <rect x="158.10833333333335" y="107.4486" width="11.716666666666667" height="177.5514" fill="#d97706" rx="3" ry="3">
+          <title>512 (llama.cpp default): 273.16</title>
+        </rect>
+      
+      <text x="206.25" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 206.25 303)">2048</text>
+    
+        <rect x="187.175" y="52.652625" width="11.716666666666667" height="232.347375" fill="#4f46e5" rx="3" ry="3">
+          <title>2048 (llama.cpp tuned): 357.46</title>
+        </rect>
+      
+        <rect x="199.89166666666668" y="52.68220000000002" width="11.716666666666667" height="232.31779999999998" fill="#059669" rx="3" ry="3">
+          <title>2048 (ollama defaults): 357.41</title>
+        </rect>
+      
+        <rect x="212.60833333333335" y="107.569175" width="11.716666666666667" height="177.430825" fill="#d97706" rx="3" ry="3">
+          <title>2048 (llama.cpp default): 272.97</title>
+        </rect>
+      
+      <text x="260.75" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 260.75 303)">4096</text>
+    
+        <rect x="241.675" y="57.685250000000025" width="11.716666666666667" height="227.31474999999998" fill="#4f46e5" rx="3" ry="3">
+          <title>4096 (llama.cpp tuned): 349.71</title>
+        </rect>
+      
+        <rect x="267.10833333333335" y="111.05479999999997" width="11.716666666666667" height="173.94520000000003" fill="#d97706" rx="3" ry="3">
+          <title>4096 (llama.cpp default): 267.61</title>
+        </rect>
+      
+      <text x="315.25" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 315.25 303)">8192</text>
+    
+        <rect x="296.175" y="64.313625" width="11.716666666666667" height="220.686375" fill="#4f46e5" rx="3" ry="3">
+          <title>8192 (llama.cpp tuned): 339.52</title>
+        </rect>
+      
+        <rect x="308.89166666666665" y="65.56195000000002" width="11.716666666666667" height="219.43804999999998" fill="#059669" rx="3" ry="3">
+          <title>8192 (ollama defaults): 337.6</title>
+        </rect>
+      
+        <rect x="321.60833333333335" y="117.20672499999998" width="11.716666666666667" height="167.79327500000002" fill="#d97706" rx="3" ry="3">
+          <title>8192 (llama.cpp default): 258.14</title>
+        </rect>
+      
+      <text x="369.75" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 369.75 303)">16384</text>
+    
+        <rect x="350.675" y="80.5282" width="11.716666666666667" height="204.4718" fill="#4f46e5" rx="3" ry="3">
+          <title>16384 (llama.cpp tuned): 314.57</title>
+        </rect>
+      
+        <rect x="376.10833333333335" y="126.88034999999999" width="11.716666666666667" height="158.11965" fill="#d97706" rx="3" ry="3">
+          <title>16384 (llama.cpp default): 243.26</title>
+        </rect>
+      
+      <text x="424.25" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 424.25 303)">32768</text>
+    
+        <rect x="405.175" y="110.104825" width="11.716666666666667" height="174.895175" fill="#4f46e5" rx="3" ry="3">
+          <title>32768 (llama.cpp tuned): 269.07</title>
+        </rect>
+      
+        <rect x="417.89166666666665" y="109.93680000000003" width="11.716666666666667" height="175.06319999999997" fill="#059669" rx="3" ry="3">
+          <title>32768 (ollama defaults): 269.33</title>
+        </rect>
+      
+        <rect x="430.60833333333335" y="144.2607" width="11.716666666666667" height="140.7393" fill="#d97706" rx="3" ry="3">
+          <title>32768 (llama.cpp default): 216.52</title>
+        </rect>
+      
+      <text x="478.75" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 478.75 303)">65536</text>
+    
+        <rect x="459.675" y="146.65724999999998" width="11.716666666666667" height="138.34275000000002" fill="#4f46e5" rx="3" ry="3">
+          <title>65536 (llama.cpp tuned): 212.84</title>
+        </rect>
+      
+        <rect x="485.10833333333335" y="169.01205" width="11.716666666666667" height="115.98795000000001" fill="#d97706" rx="3" ry="3">
+          <title>65536 (llama.cpp default): 178.44</title>
+        </rect>
+      
+      <text x="533.25" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 533.25 303)">131072</text>
+    
+        <rect x="514.175" y="187.85555" width="11.716666666666667" height="97.14445" fill="#4f46e5" rx="3" ry="3">
+          <title>131072 (llama.cpp tuned): 149.45</title>
+        </rect>
+      
+        <rect x="539.6083333333332" y="198.89254999999997" width="11.716666666666667" height="86.10745000000001" fill="#d97706" rx="3" ry="3">
+          <title>131072 (llama.cpp default): 132.47</title>
+        </rect>
+      
+      <text x="587.75" y="303" text-anchor="middle" font-size="11" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 587.75 303)">262144</text>
+    
+        <rect x="568.675" y="223.9104" width="11.716666666666667" height="61.08959999999999" fill="#4f46e5" rx="3" ry="3">
+          <title>262144 (llama.cpp tuned): 93.98</title>
+        </rect>
+      
+        <rect x="594.1083333333332" y="229.2131" width="11.716666666666667" height="55.786899999999996" fill="#d97706" rx="3" ry="3">
+          <title>262144 (llama.cpp default): 85.83</title>
+        </rect>
+      
+  
+      <rect x="218" y="9" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="232" y="18" font-size="11" fill="#4b5563" font-family="sans-serif">llama.cpp tuned</text>
+    
+      <rect x="348" y="9" width="10" height="10" fill="#059669" rx="2" />
+      <text x="362" y="18" font-size="11" fill="#4b5563" font-family="sans-serif">ollama defaults</text>
+    
+      <rect x="478" y="9" width="10" height="10" fill="#d97706" rx="2" />
+      <text x="492" y="18" font-size="11" fill="#4b5563" font-family="sans-serif">llama.cpp defau…</text>
+    
+</svg>
