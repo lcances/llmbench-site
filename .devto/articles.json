@@ -1,1 +1,7 @@
-{}
+{
+  "qwen3-5-4b-budget-computer": {
+    "id": 4949343,
+    "series": "llmbench",
+    "url": "https://dev.to/elcances/qwen35-4b-budget-computer-b0b-temp-slug-211605"
+  }
+}
