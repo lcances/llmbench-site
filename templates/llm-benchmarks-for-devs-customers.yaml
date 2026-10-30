@@ -12,7 +12,7 @@ systemPrompt: |-
   - Never invent or extrapolate a number that was not provided.
 
   BANNED WORD
-  skewing, game-changer, blazing, —
+  skewing, game-changer, blazing,  —
 
   don't generate title or markdown output. don't use bullet list unless specified, dont generate markdown table unless specified
 siteRepo: lcances/llmbench-site
@@ -186,6 +186,16 @@ dataSchema:
     type: number
     unit: tok/s
     path: series[role=baseline&runtime^=vllm].prefill_curve[prompt_tokens=512].decode_tps.median
+  - key: vllm_decode_32k_tps
+    label: Generation Speed (32k prompt, vLLM)
+    type: number
+    unit: tok/s
+    path: series[role=baseline&runtime^=vllm].prefill_curve[prompt_tokens=32768].decode_tps.median
+  - key: vllm_decode_max_context_tps
+    label: Generation Speed (Max Context, vLLM)
+    type: number
+    unit: tok/s
+    path: series[role=baseline&runtime^=vllm].full_points[max:ctx].decode_tps.median
   - key: vllm_ttft_512_ms
     label: TTFT (512 tokens, vLLM)
     type: number
@@ -245,7 +255,7 @@ blocks:
     title: ""
     type: generated
     prompt: |-
-      Write the article lead in 4-5 short sentences. Open with the one or two most striking numbers below, stated plainly, as the hook. If {x_human_reading} is below 1, say instead that it writes slower than you read. Then say in one sentence what {model_name} is and what to expect from a model of its size (see reference). End with one sentence saying that the performances score are with no tuning of the underlying engine, based on the default parameters, on a {gpu_name}.
+      Write the article lead in 4-5 short sentences. Open with the one or two most striking numbers below, stated plainly, as the hook. Right after, add this one real-world comparison, keeping its meaning and numbers: hand it a 100-page book and it starts answering after {ttft_32k_ms} ms, then writes {x_human_reading} times faster than you can read. If {x_human_reading} is below 1, say instead that it writes slower than you read. Then say in one sentence what {model_name} is and what to expect from a model of its size (see reference). End with one sentence saying that every program was tested exactly as it installs, with no tuning, on a {gpu_name}.
 
       Numbers (stock llama.cpp):
       - writes {decode_512_tps} tokens per second on a short prompt
@@ -318,7 +328,12 @@ blocks:
       at max context ({max_context}) the decode speed is {decode_max_context_tps}, the prompt processing speed is {prefill_max_context_tps}
       at max context, the first word appears after {ttft_max_context_ms} ms, and the card uses {peak_vram_max_ctx_mb} MB of its {gpu_vram_mb} MB of memory
 
-      Write a small paragraph analysing how writing speed holds up as the context grows, and how Ollama compares on the chart above. In one short sentence, comment on the wait before the first word when the full context is used.
+      And for vLLM:
+      at 512 token context, the decode speed is {vllm_decode_512_tps}
+      at 32k token context, the decode speed is {vllm_decode_32k_tps}
+      at its max context ({vllm_max_context}) the decode speed is {vllm_decode_max_context_tps}
+
+      Write a small paragraph analysing how writing speed holds up as the context grows, and how Ollama and vLLM compare on the chart above. In one short sentence, comment on the wait before the first word when the full context is used.
   - id: vllm-serving-chart
     title: When Many People Use It at Once
     type: data-chart
