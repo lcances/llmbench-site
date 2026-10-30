@@ -1,12 +1,13 @@
 name: LLM Benchmarks for Devs & Customers
-model: moonshotai/kimi-k2
+model: moonshotai/kimi-k3.1-pro
 systemPrompt: |-
   Avoid developer specific jargon and benchmarking vocabulary. the audience are people that just have 5 minutes to read an article that goes to the point.
   Keep the vocabulaire focus and don't extrapolate
 
   Rules for every block:
   - Choose the best unit for durations (245 ms stays 245 ms, 45689 ms becomes 46 s).
-  - If a value has several digits, round to the nearest integer (no comma).
+  - Round values of 10 or more to the nearest integer (no comma). Keep values below 10 at two significant digits (0.52414 becomes 0.52, 3.457 becomes 3.5): never round them to 0 or 1.
+  - For very large number, use another unit and to make it more readable. 262456 token should be written 260k token. 45370ms should be 45.4 s
   - Express energy in kWh per 1M tokens, never in joules.
   - Put the one or two most decisive numbers of a paragraph in bold (e.g. **114 tokens per second**). Bold numbers only, never whole sentences.
   - Never invent or extrapolate a number that was not provided.
@@ -69,9 +70,13 @@ dataSchema:
     type: text
     path: series[role=baseline&runtime^=vllm].runtime
   - key: artifact
-    label: Quantization / Artifact (llama.cpp, Ollama)
+    label: Quantization / Artifact (llama.cpp)
     type: text
     path: series[role=baseline&runtime^=llama.cpp].artifact
+  - key: ollama_artifact
+    label: Quantization / Artifact (Ollama)
+    type: text
+    path: series[role=defaults].artifact
   - key: vllm_artifact
     label: Quantization / Artifact (vLLM)
     type: text
@@ -156,6 +161,16 @@ dataSchema:
     type: number
     unit: tok/s
     path: series[role=defaults].prefill_curve[prompt_tokens=512].decode_tps.median
+  - key: decode_32k_ollama_tps
+    label: Generation Speed (32k prompt, Ollama)
+    type: number
+    unit: tok/s
+    path: series[role=defaults].prefill_curve[prompt_tokens=32768].decode_tps.median
+  - key: decode_max_context_ollama_tps
+    label: Generation Speed (Max Context, Ollama)
+    type: number
+    unit: tok/s
+    path: series[role=defaults].full_points[max:ctx].decode_tps.median
   - key: ttft_512_ollama_ms
     label: TTFT (512 tokens, Ollama)
     type: number
@@ -328,12 +343,17 @@ blocks:
       at max context ({max_context}) the decode speed is {decode_max_context_tps}, the prompt processing speed is {prefill_max_context_tps}
       at max context, the first word appears after {ttft_max_context_ms} ms, and the card uses {peak_vram_max_ctx_mb} MB of its {gpu_vram_mb} MB of memory
 
+      And for Ollama:
+      at 512 token context, the decode speed is {decode_512_ollama_tps}
+      at 32k token context, the decode speed is {decode_32k_ollama_tps}
+      at its max context ({max_context_ollama}) the decode speed is {decode_max_context_ollama_tps}
+
       And for vLLM:
       at 512 token context, the decode speed is {vllm_decode_512_tps}
       at 32k token context, the decode speed is {vllm_decode_32k_tps}
       at its max context ({vllm_max_context}) the decode speed is {vllm_decode_max_context_tps}
 
-      Write a small paragraph analysing how writing speed holds up as the context grows, and how Ollama and vLLM compare on the chart above. In one short sentence, comment on the wait before the first word when the full context is used.
+      The chart above plots these numbers, one bar per program. Write a small paragraph analysing how writing speed holds up as the context grows, and how Ollama and vLLM compare with llama.cpp. If one program's max context is smaller than the others', say in one short sentence that its bar is missing at the largest sizes because it cannot hold that much. In one short sentence, comment on the wait before the first word when the full context is used.
   - id: vllm-serving-chart
     title: When Many People Use It at Once
     type: data-chart
@@ -366,6 +386,11 @@ blocks:
       - llama.cpp version: {runtime_engine}
       - ollama version: {ollama_version}
       - vllm version: {vllm_version}
+      - model compression (llama.cpp): {artifact}
+      - model compression (Ollama): {ollama_artifact}
+      - model compression (vLLM): {vllm_artifact}
+
+      Copy the model compression values exactly as given. Under the table, add one sentence saying whether all three programs ran the same compressed version of the model, and if not, that the comparison between programs is not strictly like for like.
   - id: a6122d19-f8b0-414d-86b1-ff9856a9be96
     title: Conclusion
     type: generated
