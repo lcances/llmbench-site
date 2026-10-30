@@ -8,7 +8,7 @@ systemPrompt: |-
   Rules for every block:
   - Choose the best unit for durations (245 ms stays 245 ms, 45689 ms becomes 46 s).
   - If a value has several digits, round to the nearest integer (no comma).
-  - Express energy in kWh per 1M tokens, never in joules.
+  - Express energy in kWh per 1M tokens, never in joules. it is fine to have 0.xxx value there
   - Put the one or two most decisive numbers of a paragraph in bold (e.g. **114 tokens per second**). Bold numbers only, never whole sentences.
   - Never invent or extrapolate a number that was not provided.
 
