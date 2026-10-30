@@ -3,12 +3,11 @@ model: moonshotai/kimi-k2
 systemPrompt: |-
   Avoid developer specific jargon and benchmarking vocabulary. the audience are people that just have 5 minutes to read an article that goes to the point.
   Keep the vocabulaire focus and don't extrapolate
-  dont ever us `—`
 
   Rules for every block:
   - Choose the best unit for durations (245 ms stays 245 ms, 45689 ms becomes 46 s).
   - If a value has several digits, round to the nearest integer (no comma).
-  - Express energy in kWh per 1M tokens, never in joules. it is fine to have 0.xxx value there
+  - Express energy in kWh per 1M tokens, never in joules.
   - Put the one or two most decisive numbers of a paragraph in bold (e.g. **114 tokens per second**). Bold numbers only, never whole sentences.
   - Never invent or extrapolate a number that was not provided.
 
@@ -147,6 +146,11 @@ dataSchema:
     type: number
     unit: €/1M tok
     path: series[role=baseline&runtime^=llama.cpp].translations.energy.eur_per_1m_gen
+  - key: x_human_reading
+    label: Writing Speed vs Human Reading (llama.cpp)
+    type: number
+    unit: ×
+    path: series[role=baseline&runtime^=llama.cpp].translations.reading.x_human_reading
   - key: decode_512_ollama_tps
     label: Generation Speed (512t, Ollama)
     type: number
@@ -241,7 +245,7 @@ blocks:
     title: ""
     type: generated
     prompt: |-
-      Write the article lead in 3-4 short sentences. Open with the one or two most striking numbers below, stated plainly, as the hook. Then say in one sentence what {model_name} is and what to expect from a model of its size (see reference). End with one sentence saying that every program was tested exactly as it installs, with no tuning, on a {gpu_name}.
+      Write the article lead in 4-5 short sentences. Open with the one or two most striking numbers below, stated plainly, as the hook. Right after, add this one real-world comparison, keeping its meaning and numbers: hand it a 100-page book and it starts answering after {ttft_32k_ms} ms, then writes {x_human_reading} times faster than you can read. If {x_human_reading} is below 1, say instead that it writes slower than you read. Then say in one sentence what {model_name} is and what to expect from a model of its size (see reference). End with one sentence saying that every program was tested exactly as it installs, with no tuning, on a {gpu_name}.
 
       Numbers (stock llama.cpp):
       - writes {decode_512_tps} tokens per second on a short prompt
@@ -291,17 +295,18 @@ blocks:
     type: data-chart
     prompt: ""
     chart:
-      arrayPath: series[role=baseline|defaults&runtime^=llama.cpp|ollama].full_points[output_tokens=64]
+      arrayPath: series[role=baseline&runtime^=llama.cpp].full_points[output_tokens=64], series[role=defaults&runtime^=ollama].full_points[output_tokens=64], series[role=baseline&runtime^=vllm].full_points[output_tokens=64]
       chartType: bar
       xPath: ctx
+      seriesNames:
+        - llama.cpp
+        - Ollama
+        - vLLM
       yKeys:
         - decode_tps.median
       title: Writing speed vs context size
       xLabel: context size (tokens)
       yLabel: tok/s
-      seriesLabels:
-        baseline: llama.cpp
-        defaults: Ollama
       roundXToPowerOf2: true
   - id: generation-speed
     title: ""
