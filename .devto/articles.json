@@ -3,5 +3,10 @@
     "id": 4949343,
     "series": "llmbench",
     "url": "https://dev.to/elcances/qwen35-4b-budget-computer-b0b-temp-slug-211605"
+  },
+  "qwen3-5-4b-budget-computer-2": {
+    "id": 4949487,
+    "series": "llmbench",
+    "url": "https://dev.to/elcances/qwen35-4b-budget-computer-3ngi-temp-slug-2925655"
   }
 }
