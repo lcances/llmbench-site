@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleList from '../components/ArticleList.astro';
+import { allArticles } from '../lib/articles';
+
+const list = await allArticles();
+---
+
+<Base
+  title="Auralis Lab Bench"
+  description="Complete performance benchmarks of open LLMs on consumer GPUs: speed, context, memory and power, measured."
+  current="articles"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker">Articles</div>
+      <h1>What runs on consumer GPUs, and how fast</h1>
+      <p>
+        Complete benchmarks of open models on one and two RTX 5060 Ti cards: speed at every context
+        depth, maximum context, memory and power.
+      </p>
+    </header>
+    <ArticleList list={list} />
+  </div>
+</Base>

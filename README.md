@@ -1,6 +1,7 @@
 # llmbench — articles
 
-Source of the **llmbench** articles on dev.to: performance benchmarks of small
+Source of the **llmbench** articles: the complete versions on
+[bench.auralis-lab.com](https://bench.auralis-lab.com), the shorter versions on dev.to. Performance benchmarks of small
 and medium open-source LLMs on consumer hardware — prefill/decode curves,
 time-to-first-token, max context, VRAM and power, across runtimes (llama.cpp,
 Ollama, vLLM) pushed to their tuning limits.
@@ -17,6 +18,12 @@ How content gets here:
   dev.to.
 - `.devto/articles.json` maps each post to its dev.to article, so a post is
   created once and updated after that.
+- The complete articles arrive the same way in `articles/<slug>/index.md`, with
+  their charts in `articles/<slug>/images/`. A push to `articles/` or `site/`
+  runs the `site` workflow: `site/` is an [Astro](https://astro.build) project
+  that builds the articles into static pages and deploys them to Cloudflare
+  Pages (secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). Run it
+  locally with `npm ci && npm run dev` in `site/`.
 - `templates/` holds the writing app's series templates.
 
 ## About the authoring

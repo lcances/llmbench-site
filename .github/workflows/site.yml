@@ -1,0 +1,49 @@
+name: site
+
+# A push to main that touches articles/ or site/ rebuilds bench.auralis-lab.com.
+# The writing app pushes the complete articles to articles/<slug>/index.md; the
+# reduced versions in posts/ go to dev.to through the publish workflow, and the
+# two never mix.
+on:
+  push:
+    branches: [main]
+    paths: ["articles/**", "site/**", ".github/workflows/site.yml"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: site
+  cancel-in-progress: true   # only the newest build matters
+
+permissions:
+  contents: read
+
+env:
+  PROJECT: auralis-bench   # the Cloudflare Pages project
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Build
+        working-directory: site
+        run: |
+          npm ci
+          npm run build
+      - name: Deploy to Cloudflare Pages
+        working-directory: site
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # First run only: create the project. The list is checked rather than
+          # ignoring create's failure, so a bad token still fails the job.
+          if ! npx --no-install wrangler pages project list | grep -qw "$PROJECT"; then
+            npx --no-install wrangler pages project create "$PROJECT" --production-branch main
+          fi
+          npx --no-install wrangler pages deploy dist --project-name "$PROJECT" --branch main

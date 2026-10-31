@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import { allArticles, byFamily, familySlug } from '../../lib/articles';
+
+const families = byFamily(await allArticles());
+---
+
+<Base
+  title="Families"
+  description="Benchmarks grouped by model family: every size measured on the same hardware."
+  current="families"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker">Families</div>
+      <h1>Every size of a model family, on the same hardware</h1>
+    </header>
+    {
+      families.size === 0 ? (
+        <p class="label" style="padding: 40px 0">No families yet.</p>
+      ) : (
+        <div class="family-grid">
+          {[...families].map(([name, articles]) => (
+            <a href={`/families/${familySlug(name)}/`}>
+              <strong>{name}</strong>
+              <span class="label">
+                {articles.length} article{articles.length === 1 ? '' : 's'}
+              </span>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Base>

@@ -1,0 +1,81 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { allArticles, familySlug, formatDate, readingMinutes, type Article } from '../lib/articles';
+
+export async function getStaticPaths() {
+  const list = await allArticles();
+  return list.map((article) => ({ params: { slug: article.id }, props: { article, list } }));
+}
+
+interface Props {
+  article: Article;
+  list: Article[];
+}
+
+const { article, list } = Astro.props;
+const { Content, headings } = await render(article);
+const { title, description, tags, date, series, cover, devto } = article.data;
+const toc = headings.filter((h) => h.depth === 2);
+// The family, oldest first, so the list reads as the series' running order.
+const family = series ? list.filter((a) => a.data.series === series).reverse() : [];
+---
+
+<Base title={title} description={description} image={cover?.src}>
+  <div class="wrap article-layout">
+    <article class="article-main">
+      <header class="article-head">
+        {series && <div class="kicker">{series}</div>}
+        <h1>{title}</h1>
+        <p class="dek">{description}</p>
+        <div class="meta">
+          {date && <time datetime={formatDate(date)}>{formatDate(date)}</time>}
+          <span>{readingMinutes(article.body)} min read</span>
+          {tags.length > 0 && <span>{tags.map((t) => `#${t}`).join(' ')}</span>}
+        </div>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      {devto && (
+        <p class="article-foot">
+          A shorter version of this article is on <a href={devto}>dev.to</a>.
+        </p>
+      )}
+    </article>
+    <aside class="article-rail">
+      <div>
+        {toc.length > 1 && (
+          <nav aria-label="On this page">
+            <div class="label">On this page</div>
+            <ul>
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+        {family.length > 1 && (
+          <div class="rail-block">
+            <div class="label">
+              <a href={`/families/${familySlug(series!)}/`}>{series}</a>
+            </div>
+            <ol>
+              {family.map((a) =>
+                a.id === article.id ? (
+                  <li class="current">{a.data.title}</li>
+                ) : (
+                  <li>
+                    <a href={`/${a.id}/`}>{a.data.title}</a>
+                  </li>
+                ),
+              )}
+            </ol>
+          </div>
+        )}
+      </div>
+    </aside>
+  </div>
+</Base>

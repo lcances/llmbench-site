@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { allArticles, byFamily, familySlug, type Article } from '../../lib/articles';
+
+export async function getStaticPaths() {
+  const families = byFamily(await allArticles());
+  return [...families].map(([name, list]) => ({
+    params: { family: familySlug(name) },
+    props: { name, list },
+  }));
+}
+
+interface Props {
+  name: string;
+  list: Article[];
+}
+
+const { name, list } = Astro.props;
+---
+
+<Base
+  title={name}
+  description={`Every ${name} model benchmarked on the same consumer hardware.`}
+  current="families"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker">Family</div>
+      <h1>{name}</h1>
+      <p>Every size we measured, on the same hardware and the same runtimes.</p>
+    </header>
+    <ArticleList list={list} />
+  </div>
+</Base>

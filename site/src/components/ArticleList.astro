@@ -1,0 +1,31 @@
+---
+import { formatDate, type Article } from '../lib/articles';
+
+interface Props {
+  list: Article[];
+}
+
+const { list } = Astro.props;
+---
+
+{
+  list.length === 0 ? (
+    <p class="label" style="padding: 40px 0">No articles yet.</p>
+  ) : (
+    <ul class="article-list">
+      {list.map((a) => (
+        <li>
+          <a href={`/${a.id}/`}>
+            <span class="label">
+              {a.data.date ? formatDate(a.data.date) : a.data.series ?? ''}
+            </span>
+            <span>
+              <h2>{a.data.title}</h2>
+              <p>{a.data.description}</p>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
