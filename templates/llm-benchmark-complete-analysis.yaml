@@ -18,6 +18,7 @@ systemPrompt: |-
   BANNED WORDS
   skewing, game-changer, blazing, —
 siteRepo: lcances/llmbench-site
+destination: website
 categories:
   - ai
   - llm
@@ -406,6 +407,11 @@ blocks:
       - small models (<8B) can be interesting to run on mobile or on edge
       - dense medium size models (10B <> 27B) start to be interesting for analysing and general knowledge
       - dense medium MoE (35B a3b) are interesting for VRAM constrained systems and more specialized work
+    notes: |-
+      Inverted pyramid: the article leads with measured numbers (no PDF / human-reading analogies),
+      then TL;DR + verdict, then the deep dives; methodology lives in the appendix at the bottom.
+      Since 2026-10-27 every runtime runs stock (no tuning search): llama.cpp's headline series is
+      its `baseline` (llama-server defaults).
   - id: headline
     title: Straight to the Results
     type: generated
@@ -436,6 +442,10 @@ blocks:
     title: ""
     type: data-chart
     prompt: ""
+    notes: |-
+      seriesLabels keys must match the series' comma-joined role list exactly. Keep labels short
+      (16 characters or fewer) so the legend does not truncate them. vLLM stays off the shared
+      line charts: its stock series is also called "baseline" and would merge with llama.cpp's.
     chart:
       arrayPath: series[role=defaults|reference:ollama-defaults|baseline&runtime^=llama.cpp|ollama].prefill_curve
       chartType: line
@@ -520,6 +530,11 @@ blocks:
     title: ""
     type: data-chart
     prompt: ""
+    notes: |-
+      full_points[output_tokens=64] is the deep-context ladder (output fixed at 64). Rung positions
+      are odd numbers (ctx - 320), hence roundXToPowerOf2. Failed rungs (OOM) have null metrics and
+      simply drop out of the line. best:kv_type=q8_0 is the stock shape's second probe (uniform
+      q8_0 KV + flash attention); reference:ollama-defaults stops at 32k, so it stays off.
     chart:
       arrayPath: series[role=baseline|best:kv_type=q8_0|defaults&runtime^=llama.cpp|ollama].full_points[output_tokens=64]
       chartType: line
@@ -580,6 +595,11 @@ blocks:
     title: ""
     type: data-chart
     prompt: ""
+    notes: |-
+      One bar per runtime: xPath and seriesPath are both `runtime`, which keeps llama.cpp's and
+      vLLM's "baseline" series apart. kwh_per_1m_gen is whole-box wall energy for all three
+      (energy_basis: wall). GPU-only energy exists only as J/1k in the data, so it stays out of the
+      chart and reaches the analysis block via converted schema fields instead.
     chart:
       arrayPath: series[role=baseline|defaults]
       chartType: bar
@@ -598,10 +618,19 @@ blocks:
     title: "Capping the GPU: Performance per Watt"
     type: generated
     prompt: "Write a 2-3 sentence plain-language chapeau: we lowered the graphics card's power limit step by step below its stock {gpu_power_limit_w} W to see how much generation speed is sacrificed — the question that matters for quiet, cool, or energy-conscious builds. The chart shows decode speed at each power cap. No other numbers yet."
+    notes: |-
+      The power-cap sweep (series[].power_knee) only exists for models where `bench power-knee`
+      was run (it now defaults to the llama.cpp baseline role) — worth it on bigger models that
+      push the card to its limit. For other models this whole section (intro, chart, analysis)
+      resolves to nothing: delete the three power-cap blocks from that issue.
   - id: power-cap-chart
     title: ""
     type: data-chart
     prompt: ""
+    notes: |-
+      The comma path prepends the stock point (stock power limit) to the capped steps so the line
+      starts at the uncapped speed. All power_knee metrics are plain numbers, not stat objects.
+      Renders "No data found" for models without power_knee — delete the section there.
     chart:
       arrayPath: series[role=baseline&runtime^=llama.cpp].power_knee.stock, series[role=baseline&runtime^=llama.cpp].power_knee.steps
       chartType: line
@@ -615,6 +644,10 @@ blocks:
     title: ""
     type: generated
     prompt: "Write a short technical paragraph (2-3 sentences) analysing the power-cap chart above, using the data below. Establish, with numbers: decode speed at the stock power limit versus at the recommended cap (recommended_cap_w; the per-step decode_drop_pct gives the loss), and conclude whether capping the card is effectively free in performance. You may cite average power draw in W; do not quote any joule figures. If no data appears below, write a single sentence saying the power-cap sweep was not run for this model."
+    notes: |-
+      Linked leaf by leaf, not the whole power_knee subtree: that also carries energy_j and
+      energy_per_1k_gen_j, and energy must reach the model in kWh per 1M tokens only. The steps[*]
+      lists are in the same order (one entry per power cap).
     dataPaths:
       - series[role=baseline&runtime^=llama.cpp].power_knee.stock.limit_w
       - series[role=baseline&runtime^=llama.cpp].power_knee.stock.decode_tps
@@ -631,6 +664,7 @@ blocks:
     title: ""
     type: data-chart
     prompt: ""
+    notes: One bar per runtime (xPath and seriesPath both `runtime`, as in the energy chart).
     chart:
       arrayPath: series[role=baseline|defaults]
       chartType: bar
@@ -649,6 +683,13 @@ blocks:
     title: "Serving Many Users at Once: vLLM"
     type: generated
     prompt: "Write a 2-3 sentence plain-language chapeau: everything so far measured one request at a time, but a model serving a team or an application receives many requests at once — and that is the job of vLLM, the server runtime used in production deployments, which interleaves many requests through the GPU instead of queueing them (a technique called continuous batching). Add one plain caveat: vLLM runs a different compressed model file ({vllm_artifact}) than the one llama.cpp and Ollama used ({artifact}), so this compares two complete setups, not just two programs. No numbers yet."
+    notes: |-
+      The vLLM section needs a vLLM baseline run that did not go out of memory at launch
+      (series[role=baseline&runtime^=vllm] with a completed batched_curve and a prefill_curve). For
+      models without a usable vLLM run, delete the seven vllm-* blocks from that issue. vLLM roles
+      reuse the llama.cpp role names — every selector on a shared role must carry a &runtime^=
+      condition. vLLM runs a different 4-bit artifact (AWQ) than llama.cpp/Ollama (GGUF), so
+      single-request numbers compare runtime+artifact stacks, not runtimes alone.
   - id: vllm-single-analysis
     title: ""
     type: generated
@@ -666,6 +707,10 @@ blocks:
     title: ""
     type: data-chart
     prompt: ""
+    notes: |-
+      batched_curve holds the depth × concurrency grid (256-token outputs, one rep per point):
+      512 {1..16}, 1024 {1..8}, 4096 {1,2,4}, 32768 {1,2}, plus a synthetic max column at c=1 that
+      the prompt_tokens filter leaves out. One line per prompt depth (seriesPath: prompt_tokens).
     chart:
       arrayPath: series[role=baseline&runtime^=vllm].batched_curve[prompt_tokens=512|1024|4096|32768]
       chartType: line
@@ -710,6 +755,9 @@ blocks:
     title: ""
     type: generated
     prompt: "Write a short technical paragraph (2-3 sentences) analysing the per-request latency chart above, using the data below. Key numbers at 512-token prompts: the median wait for the first token grows from {vllm_req_ttft_c1_ms} ms alone to {vllm_req_ttft_cmax_ms} ms at {vllm_max_users} concurrent requests. Say whether a user would notice at short prompts, and how the picture changes at longer prompts (the other lines)."
+    notes: |-
+      Medians only: req_ttft_ms.p95 comes out below the median on some 2-request points in the
+      current analyzer output, so it is not quoted until that is checked.
     dataPaths:
       - series[role=baseline&runtime^=vllm].batched_curve[prompt_tokens=512|1024|4096|32768]
   - id: method-bench
@@ -738,6 +786,17 @@ blocks:
     title: ""
     type: data-table
     prompt: ""
+    notes: |-
+      Role                        │ Description
+      ────────────────────────────┼──────────────────────────────────────────────────────────────
+      baseline (llama.cpp)        │ llama-server's own defaults ({} — no flags forced).
+      reference:ollama-defaults   │ llama.cpp running the exact CLI flags Ollama passes (-fa auto -b 512 -ub 512 -t 4).
+      best:kv_type=q8_0           │ Context probe variant: uniform q8_0 KV cache + flash attention.
+      defaults                    │ The actual Ollama runtime instance with stock configuration.
+      baseline (vllm)             │ vLLM serve stock defaults.
+      best:kv_cache_dtype=fp8     │ vLLM context probe variant: fp8 KV cache.
+
+      No tuning search since 2026-10-27: tuned:* and best:flash_attn=* roles no longer exist.
     table:
       arrayPath: series
       columns:
