@@ -1,5 +1,5 @@
 name: LLM Benchmark — Complete Analysis
-model: moonshotai/kimi-k2
+model: moonshotai/kimi-k3.1-pro
 systemPrompt: |-
   This is the complete, data-heavy companion article to a short 5-minute benchmark post. Two registers coexist:
   - Section introductions (chapeaux) are plain language: a curious developer who never ran a local LLM must be able to follow them. No numbers unless the prompt gives them.
@@ -7,15 +7,16 @@ systemPrompt: |-
 
   Rules for every block:
   - Choose the best unit for durations (245 ms stays 245 ms, 45689 ms becomes 46 s).
-  - If a value has several digits, round to the nearest integer (no comma).
+  - Round values of 10 or more to the nearest integer (no comma). Keep values below 10 at two significant digits (0.52414 becomes 0.52, 3.457 becomes 3.5): never round them to 0 or 1.
+  - For very large number, use another unit and to make it more readable. 262456 token should be written 260k token. 45370ms should be 45.4 s
   - Express energy in kWh per 1M tokens, never in joules.
   - Never invent or extrapolate a number that was not provided.
-  - Stay with the measured numbers: no real-world analogies (documents, books, human reading speed), except the one the article lead's prompt gives word for word.
+  - Stay with the measured numbers: no real-world analogies (documents, books, human reading speed).
   - In technical chart-analysis paragraphs, put the one or two most decisive numbers in bold (e.g. **40 ms**) so a skimmer's eye catches them. Bold numbers only, never whole sentences.
   - Don't generate titles or markdown headers. No bullet lists and no markdown tables unless the prompt explicitly asks for one.
 
   BANNED WORDS
-  skewing, game-changer, blazing
+  skewing, game-changer, blazing, —
 siteRepo: lcances/llmbench-site
 categories:
   - ai
@@ -23,19 +24,6 @@ categories:
   - benchmark
   - devops
   - performance
-cover:
-  title: "{model_name} · {gpu_name}"
-  stats:
-    - value: "{decode_512_tps} tok/s"
-      label: decode speed, 512-token prompt
-    - value: "{ttft_512_ms} ms"
-      label: time to first token
-    - value: "{energy_kwh_per_1M} kWh"
-      label: at the wall per 1M tokens
-  sparkline:
-    arrayPath: series[role=baseline&runtime^=llama.cpp].full_points[output_tokens=64]
-    xPath: ctx
-    yPath: decode_tps.median
 dataSchema:
   - key: model_name
     label: Model Name
@@ -288,11 +276,6 @@ dataSchema:
     type: number
     unit: €/1M tok
     path: series[role=baseline&runtime^=llama.cpp].translations.energy.eur_per_1m_gen
-  - key: x_human_reading
-    label: Writing Speed vs Human Reading (llama.cpp)
-    type: number
-    unit: ×
-    path: series[role=baseline&runtime^=llama.cpp].translations.reading.x_human_reading
   - key: vllm_load_time_s
     label: Model Load Time (vLLM)
     type: number
@@ -416,8 +399,6 @@ blocks:
       - holds a {max_context}-token context in {peak_vram_max_ctx_mb} MB of the card's {gpu_vram_mb} MB
       - {energy_kwh_per_1M} kWh at the wall per 1M generated tokens
 
-      Right after the hook, add this one real-world comparison, keeping its meaning and numbers: hand it a 100-page book (a 32k-token prompt) and it starts answering after {ttft_32k_ms} ms, then writes {x_human_reading} times faster than you can read. If {x_human_reading} is below 1, say instead that it writes slower than you read.
-
       Then 2-3 plain sentences: we ran {model_name} with three runtimes — llama.cpp, Ollama and vLLM — each exactly as it installs, with no tuning, and measured generation speed, prompt processing, the wait for the first token, the context ceiling, memory, power at the wall socket and serving many users at once. Mention that this is the full-data companion to a shorter 5-minute article, and that the exact test bench is described at the end.
 
       For reference on expected capacity (use it to set expectations for {model_name}, one short sentence):
@@ -425,7 +406,7 @@ blocks:
       - small models (<8B) can be interesting to run on mobile or on edge
       - dense medium size models (10B <> 27B) start to be interesting for analysing and general knowledge
       - dense medium MoE (35B a3b) are interesting for VRAM constrained systems and more specialized work
-  - id: straight-to-results
+  - id: headline
     title: Straight to the Results
     type: generated
     prompt: |-
