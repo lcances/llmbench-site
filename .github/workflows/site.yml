@@ -17,9 +17,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  PROJECT: auralis-bench   # the Cloudflare Pages project
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -35,15 +32,11 @@ jobs:
         run: |
           npm ci
           npm run build
-      - name: Deploy to Cloudflare Pages
+      # An assets-only Worker (site/wrangler.jsonc), which also attaches
+      # bench.auralis-lab.com as its custom domain.
+      - name: Deploy to Cloudflare Workers
         working-directory: site
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          # First run only: create the project. The list is checked rather than
-          # ignoring create's failure, so a bad token still fails the job.
-          if ! npx --no-install wrangler pages project list | grep -qw "$PROJECT"; then
-            npx --no-install wrangler pages project create "$PROJECT" --production-branch main
-          fi
-          npx --no-install wrangler pages deploy dist --project-name "$PROJECT" --branch main
+        run: npx --no-install wrangler deploy

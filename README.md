@@ -21,8 +21,9 @@ How content gets here:
 - The complete articles arrive the same way in `articles/<slug>/index.md`, with
   their charts in `articles/<slug>/images/`. A push to `articles/` or `site/`
   runs the `site` workflow: `site/` is an [Astro](https://astro.build) project
-  that builds the articles into static pages and deploys them to Cloudflare
-  Pages (secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). Run it
+  that builds the articles into static pages and deploys them as an
+  assets-only Cloudflare Worker, `site/wrangler.jsonc` (secrets
+  `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). Run it
   locally with `npm ci && npm run dev` in `site/`.
 - `templates/` holds the writing app's series templates.
 

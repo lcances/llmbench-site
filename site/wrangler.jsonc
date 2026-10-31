@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // An assets-only Worker: no script, just the Astro build output.
+  "name": "auralis-bench",
+  "compatibility_date": "2026-10-31",
+  "assets": {
+    "directory": "./dist/",
+    // Astro writes dist/404.html; unknown paths get it with a 404 status.
+    "not_found_handling": "404-page"
+  },
+  // Deploy creates the DNS record and certificate (the zone is on this account).
+  "routes": [{ "pattern": "bench.auralis-lab.com", "custom_domain": true }]
+}
