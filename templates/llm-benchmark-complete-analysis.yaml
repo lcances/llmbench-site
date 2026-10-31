@@ -8,7 +8,7 @@ systemPrompt: |-
   Rules for every block:
   - Choose the best unit for durations (245 ms stays 245 ms, 45689 ms becomes 46 s).
   - Round values of 10 or more to the nearest integer (no comma). Keep values below 10 at two significant digits (0.52414 becomes 0.52, 3.457 becomes 3.5): never round them to 0 or 1.
-  - For very large number, use another unit and to make it more readable. 262456 token should be written 260k token. 45370ms should be 45.4 s
+  - For very large number, use another unit and to make it more readable. 262456 token should be written 260k token. 45370.32 ms should be 45.4 s
   - Express energy in kWh per 1M tokens, never in joules.
   - Never invent or extrapolate a number that was not provided.
   - Stay with the measured numbers: no real-world analogies (documents, books, human reading speed).
@@ -410,7 +410,7 @@ blocks:
     title: Straight to the Results
     type: generated
     prompt: |-
-      Write one short sentence introducing the table: every number below was measured on stock llama.cpp, and each row gets its own deep dive further down. Then include the following exact Markdown metric table:
+      Write one short sentence introducing the table: every number below was measured on stock llama.cpp, and each row gets its own deep dive further down. Then include the following Markdown metric table:
 
       | Metric | 512 Context | 8k Context | 32k Context | Max Context ({max_context}) |
       | --- | --- | --- | --- | --- |
