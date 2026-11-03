@@ -6,17 +6,17 @@ cover: "images/cover.png"
 issue: "620ca8f6-006f-4b84-a09b-828f149dea6f"
 ---
 
-With stock llama.cpp, qwen3.5-4b delivers **114 tokens per second**, with the first word appearing in **101 ms**. Hand it a 100-page book and it starts answering after 6.51 s, then writes 21 times faster than you can read. The model holds a 260k-token context using 12 GB of the card’s 16 GB and uses 0.63 kWh per 1M generated tokens. qwen3.5-4b is a 4-billion-parameter language model in the small (<8B) class, and models at that size can be interesting to run on mobile or at the edge.
+qwen3.5-4b is a 4-billion-parameter language model in the small (<8B) class. On the test machine it generates text **21 times faster than you can read**, even with a 100-page book in the prompt. Models at that size can be interesting to run on mobile or at the edge.
 
 ## Straight to the Results
 
-Verdict: qwen3.5-4b is quick on an NVIDIA GeForce RTX 5060 Ti for short prompts, but long-context use is much slower and involves longer waits.
+qwen3.5-4b is quick on an NVIDIA GeForce RTX 5060 Ti when prompts are short. Long prompts change that: the first word takes much longer to arrive, and generation slows down.
 
 - Speed: **114 tokens per second** on a short prompt, dropping to **34 tokens per second** at the full 260k-token context.
-- Waiting: The first word arrives in **101 ms** on a short prompt and takes **6.5 s** on a 32k-token prompt.
-- Electricity: **0.63 kWh per 1M generated tokens**, costing about **€0.16**.
+- Waiting: **101 ms** to the first word on a short prompt, **6.5 s** on a 32k-token prompt.
+- Electricity: **0.63 kWh per 1M generated tokens**, roughly **€0.16**.
 
-The table shows measurements taken with llama.cpp using its standard installation.
+The measurements below come from llama.cpp installed with its standard settings.
 
 | Metric | 512 Context | 32k Context | Max Context (260k) |
 | --- | --- | --- | --- |
@@ -26,36 +26,40 @@ The table shows measurements taken with llama.cpp using its standard installatio
 
 ## Which Program Should You Run It With?
 
-The same model was run with three free programs people use at home: llama.cpp, Ollama, and vLLM, each set up with its standard installation. The table compares writing speed, first-word delay, context length, start-up time, and electricity use.
+The model ran under llama.cpp, Ollama and vLLM, each with its default settings.
 
 | | llama.cpp | Ollama | vLLM |
 | --- | --- | --- | --- |
-| Writing speed, short prompt (tok/s) | 113.757 | 113.619 | 107.4 |
-| Wait for first word, short prompt | 101.386 ms | 164.781 ms | 101.443 ms |
-| Wait for first word, 32k prompt | 6512.955 ms | 7267.49 ms | 7543.24 ms |
-| Longest context (tokens) | 262144 | 262144 | 256000 |
-| Start-up time | 1.027 s | 4.745 s | 47.641 s |
-| Electricity (kWh per 1M tokens) | 0.62608 | 0.65178 | 0.52414 |
+| Writing speed, short prompt (tok/s) | 114 | 114 | 107 |
+| Wait for first word, short prompt | 101 ms | 165 ms | 101 ms |
+| Wait for first word, 32k prompt | 6.5 s | 7.3 s | 7.5 s |
+| Longest context (tokens) | 262k | 262k | 256k |
+| Start-up time | 1.03 s | 4.7 s | 48 s |
+| Electricity (kWh per 1M tokens) | 0.63 | 0.65 | 0.52 |
 
-llama.cpp narrowly wins writing speed (**114 tok/s**) and both first-word waits (vLLM is effectively tied on the short prompt), and it starts fastest in 1.0 s; llama.cpp and Ollama tie for longest context at 260k tokens, while vLLM uses the least electricity at **0.52 kWh per 1M tokens**, leaving Ollama without an outright row win. For one person on their own machine, Ollama is the easiest to install and llama.cpp is the strongest all-round choice in these measurements; for serving several people, vLLM's server design is the better fit, although its **48 s** start-up is much slower and the table does not test multi-user serving. vLLM ran the awq-AWQ-4bit compressed version of the model, while llama.cpp and Ollama ran gguf-Q4_K_M, so the programs were not tested with identical model files.
+For one person on one machine, llama.cpp is the straightforward choice. It ties Ollama on short-prompt speed, matches vLLM for the quickest first word, and starts in **1.03 s** against Ollama's 4.7 s and vLLM's **48 s**. Ollama runs at the same speed but takes longer to start and to answer.
+
+vLLM earns its place on a shared machine. It uses the least electricity at **0.52 kWh per 1M tokens**, and its writing speed stays close to the other two on short prompts. The wait for the first word on a 32k prompt is 7.5 s, compared with 6.5 s for llama.cpp, a small gap next to its heavier setup and long start-up.
 
 ## Writing Speed as the Conversation Grows
 
 ![Writing speed vs context size](images/writing-speed-vs-context-size.png)
 
-Decode speed is remarkably flat until the context gets large: from 512 to 32k tokens llama.cpp loses only about a quarter of its pace, and Ollama matches it almost exactly at every size (114 and 88 tokens per second at the two small sizes, 33 and 34 tokens per second at the very top), so on raw throughput the two are interchangeable. Beyond 32k, however, all three fall off a cliff — llama.cpp ends up roughly **3.4x slower** than at 512 tokens, and the memory needed to hold the KV cache starts to bite. vLLM starts out slightly behind at 107 tokens per second but degrades more gracefully, and at its own ceiling it still runs at **36 tokens per second**, about 6% ahead of llama.cpp and 7% ahead of Ollama; its bar is missing at the largest size because it cannot hold quite as much context.
+Decode speed stays close to the short-prompt figure until the context grows. llama.cpp drops from **114 tokens per second** at 512 tokens to 88 at 32k, giving up about a quarter of its pace, and Ollama matches it at both sizes. At the top, llama.cpp reaches **34 tokens per second** and Ollama 33, which makes the two interchangeable for raw throughput.
 
-The wait before the first word at full context, around **135 s**, is essentially the time needed to chew through the 262k-token prompt at 1946 tokens per second, with the card spending 12 GB of its 16 GB on the cache — so a long prompt, not a slow model, is what you are waiting for.
+Past 32k, all three slow sharply. llama.cpp ends up about **3.4x** slower than at 512 tokens as the KV cache starts to eat into the card's memory. vLLM begins slightly behind at 107 tokens per second but holds up better; at the largest context it can manage, it still runs at **36 tokens per second**, about 6% ahead of llama.cpp and 7% ahead of Ollama. It has no figure at the full 262k size because it cannot hold that much context.
+
+The wait for the first word at full context, about **135 s**, is mostly the time needed to process the 262k-token prompt at **1946 tokens per second**. The card spends 12 GB of its 16 GB on the KV cache, so the delay comes from reading the prompt rather than from slow generation.
 
 ## When Many People Use It at Once
 
 ![Total tokens produced per second vs simultaneous users](images/total-tokens-produced-per-second-vs-simultaneous-users.png)
 
-With vLLM, a program designed for sharing, one computer can serve **16 people at the same time**. Together, they receive **823 tokens per second**, compared with **103 tokens per second** for one person alone, and each still sees the first word after about **1210 ms**. One budget computer can back a whole team or a small product, not just one user.
+A single vLLM server can serve **16 people at once**. Together they get **823 tokens per second**, compared with 103 tokens per second for one user alone, and each person still sees the first word after about 1210 ms. One budget computer can back a whole team or a small product, not just one user.
 
 ## The Test Bench
 
-The hardware stays identical for every model in this series, so each result is measured on the same machine. That makes the numbers directly comparable from one model to the next, and it makes it possible to tell apart how much of a score change comes from the model itself rather than from different hardware.
+Every model in this series ran on the same machine, with the same **16 GB** GeForce RTX 5060 Ti, so the results can be compared directly. Any difference between models comes from the model itself rather than from a change in hardware.
 
 | Component | Details |
 |---|---|
@@ -71,13 +75,13 @@ The hardware stays identical for every model in this series, so each result is m
 | Model compression (Ollama) | gguf-Q4_K_M |
 | Model compression (vLLM) | awq-AWQ-4bit |
 
-The three programs did not all run the same compressed version of the model: llama.cpp and Ollama both used gguf-Q4_K_M, while vLLM used awq-AWQ-4bit, so the comparison between programs is not strictly like for like.
-
 ## Conclusion
 
-On a budget machine with an NVIDIA GeForce RTX 5060 Ti, qwen3.5-4b is practical for everyday use. The first token arrives in **101 ms**, and short-prompt decoding reaches **113.757 tok/s** under llama.cpp, with Ollama matching it at **113.619 tok/s** and vLLM slightly behind at **107.4 tok/s**, so the gap between the three backends on a single short prompt is about 6 tok/s. At the far end of the test, a 262144-token run takes **134.5 s** and the lowest decoding speed recorded is **33.557 tok/s**, which is still fast enough to read the output as it streams rather than waiting. The energy cost is **0.63 kWh per 1M generated tokens**, low enough that electricity is not the reason to limit usage. Running several people at once works as well: vLLM served 16 concurrent users at **823.238 tok/s** in total on the same card.
+For a single user on an RTX 5060 Ti, llama.cpp is the straightforward pick. It starts in about a second, matches Ollama on speed, and needs no server setup.
 
-For one person I would pick llama.cpp, since it posts the highest decoding speed and the shortest response time here, and for several people at once I would pick vLLM, which handled 16 users at 823.238 tok/s in total.
+When several people share the same card, vLLM is the better fit. Its slower start-up matters little on a machine that stays running.
+
+The practical limit is context length. Near the model's ceiling, the KV cache takes 12 GB of the card's 16 GB, and a full-length prompt takes **135 s** to process before the first word arrives. Short prompts are where this setup feels fast; feeding it whole documents is a different story.
 
 ## Further reading
 
