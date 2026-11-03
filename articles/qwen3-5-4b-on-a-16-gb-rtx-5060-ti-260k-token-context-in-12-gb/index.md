@@ -139,8 +139,4 @@ I ran the same model under several configurations to separate the impact of the 
 
 ## Further Reading
 
-[Read the short 5-minute article about this model](PLACEHOLDER_URL)
-
-[Read the previous article in the series](PLACEHOLDER_URL)
-
-[Read the next article in the series](PLACEHOLDER_URL)
+-
