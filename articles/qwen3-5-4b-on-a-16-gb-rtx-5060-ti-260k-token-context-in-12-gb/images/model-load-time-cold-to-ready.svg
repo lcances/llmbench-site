@@ -1,0 +1,40 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="18" font-weight="600" fill="#111827" font-family="sans-serif">Model load time, cold to ready</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif">runtime</text>
+  <text x="18" y="165" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">load time (s, median)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="205" x2="615" y2="205" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="209" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">20</text>
+    
+      <line x1="70" y1="125" x2="615" y2="125" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="129" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">40</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">60</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="160.83333333333331" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 160.83333333333331 303)">llama.cpp@b11960</text>
+    
+        <rect x="142.83333333333331" y="280.892" width="35" height="4.108000000000004" fill="#4f46e5" rx="3" ry="3">
+          <title>llama.cpp@b11960 (load_time_s.median): 1.03</title>
+        </rect>
+      
+      <text x="342.5" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 342.5 303)">ollama@v0.40.13</text>
+    
+        <rect x="324.5" y="266.02" width="35" height="18.980000000000018" fill="#4f46e5" rx="3" ry="3">
+          <title>ollama@v0.40.13 (load_time_s.median): 4.75</title>
+        </rect>
+      
+      <text x="524.1666666666666" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 524.1666666666666 303)">vllm@0.27.1</text>
+    
+        <rect x="506.16666666666663" y="94.436" width="35" height="190.564" fill="#4f46e5" rx="3" ry="3">
+          <title>vllm@0.27.1 (load_time_s.median): 47.64</title>
+        </rect>
+      
+  
+</svg>

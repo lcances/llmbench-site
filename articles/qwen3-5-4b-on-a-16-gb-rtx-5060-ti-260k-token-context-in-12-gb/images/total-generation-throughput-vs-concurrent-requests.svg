@@ -1,0 +1,106 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="18" font-weight="600" fill="#111827" font-family="sans-serif">Total generation throughput vs concurrent requests</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif">concurrent requests</text>
+  <text x="18" y="173" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 173)">total tok/s (median)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="240.2" x2="615" y2="240.2" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="244.2" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">200</text>
+    
+      <line x1="70" y1="195.39999999999998" x2="615" y2="195.39999999999998" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="199.39999999999998" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">400</text>
+    
+      <line x1="70" y1="150.6" x2="615" y2="150.6" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="154.6" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">600</text>
+    
+      <line x1="70" y1="105.79999999999998" x2="615" y2="105.79999999999998" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="109.79999999999998" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">800</text>
+    
+      <line x1="70" y1="61" x2="615" y2="61" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="65" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">1.0k</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="124.5" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 124.5 303)">1</text>
+    
+        <rect x="86.35" y="261.91008" width="18.075" height="23.089920000000006" fill="#4f46e5" rx="3" ry="3">
+          <title>1 (512-token prompt): 103.08</title>
+        </rect>
+      
+        <rect x="105.425" y="262.783008" width="18.075" height="22.216992000000005" fill="#059669" rx="3" ry="3">
+          <title>1 (1k-token prompt): 99.18</title>
+        </rect>
+      
+        <rect x="124.5" y="267.173632" width="18.075" height="17.826368000000002" fill="#d97706" rx="3" ry="3">
+          <title>1 (4k-token prompt): 79.58</title>
+        </rect>
+      
+        <rect x="143.575" y="279.569568" width="18.075" height="5.430431999999996" fill="#e11d48" rx="3" ry="3">
+          <title>1 (32k-token prompt): 24.24</title>
+        </rect>
+      
+      <text x="233.5" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 233.5 303)">2</text>
+    
+        <rect x="195.35" y="252.971136" width="18.075" height="32.028864" fill="#4f46e5" rx="3" ry="3">
+          <title>2 (512-token prompt): 142.99</title>
+        </rect>
+      
+        <rect x="214.42499999999998" y="245.3856" width="18.075" height="39.61439999999999" fill="#059669" rx="3" ry="3">
+          <title>2 (1k-token prompt): 176.85</title>
+        </rect>
+      
+        <rect x="233.5" y="257.531104" width="18.075" height="27.468895999999972" fill="#d97706" rx="3" ry="3">
+          <title>2 (4k-token prompt): 122.63</title>
+        </rect>
+      
+        <rect x="252.575" y="278.951104" width="18.075" height="6.048896000000013" fill="#e11d48" rx="3" ry="3">
+          <title>2 (32k-token prompt): 27</title>
+        </rect>
+      
+      <text x="342.5" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 342.5 303)">4</text>
+    
+        <rect x="304.35" y="208.84224" width="18.075" height="76.15776" fill="#4f46e5" rx="3" ry="3">
+          <title>4 (512-token prompt): 339.99</title>
+        </rect>
+      
+        <rect x="323.425" y="217.860928" width="18.075" height="67.139072" fill="#059669" rx="3" ry="3">
+          <title>4 (1k-token prompt): 299.73</title>
+        </rect>
+      
+        <rect x="342.5" y="246.523072" width="18.075" height="38.47692799999999" fill="#d97706" rx="3" ry="3">
+          <title>4 (4k-token prompt): 171.77</title>
+        </rect>
+      
+      <text x="451.5" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 451.5 303)">8</text>
+    
+        <rect x="413.35" y="158.272224" width="18.075" height="126.727776" fill="#4f46e5" rx="3" ry="3">
+          <title>8 (512-token prompt): 565.75</title>
+        </rect>
+      
+        <rect x="432.425" y="181.465632" width="18.075" height="103.534368" fill="#059669" rx="3" ry="3">
+          <title>8 (1k-token prompt): 462.21</title>
+        </rect>
+      
+      <text x="560.5" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 560.5 303)">16</text>
+    
+        <rect x="522.35" y="100.59468799999999" width="18.075" height="184.405312" fill="#4f46e5" rx="3" ry="3">
+          <title>16 (512-token prompt): 823.24</title>
+        </rect>
+      
+  
+      <rect x="126" y="29" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="140" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">512-token prompt</text>
+    
+      <rect x="295" y="29" width="10" height="10" fill="#059669" rx="2" />
+      <text x="309" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">1k-token prompt</text>
+    
+      <rect x="455" y="29" width="10" height="10" fill="#d97706" rx="2" />
+      <text x="469" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">4k-token prompt</text>
+    
+      <rect x="446" y="45" width="10" height="10" fill="#e11d48" rx="2" />
+      <text x="460" y="54" font-size="14" fill="#4b5563" font-family="sans-serif">32k-token prompt</text>
+    
+</svg>

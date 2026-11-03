@@ -1,0 +1,153 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="18" font-weight="600" fill="#111827" font-family="sans-serif">Peak VRAM vs context size</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif">context size (tokens)</text>
+  <text x="18" y="165" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">peak VRAM (MB)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="205" x2="615" y2="205" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="209" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">5.0k</text>
+    
+      <line x1="70" y1="125" x2="615" y2="125" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="129" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">10.0k</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">15.0k</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="70" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 70 303)">2048</text>
+    
+      <text x="147.85714285714286" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 147.85714285714286 303)">4096</text>
+    
+      <text x="225.71428571428572" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 225.71428571428572 303)">8192</text>
+    
+      <text x="303.57142857142856" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 303.57142857142856 303)">16384</text>
+    
+      <text x="381.42857142857144" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 381.42857142857144 303)">32768</text>
+    
+      <text x="459.28571428571433" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 459.28571428571433 303)">65536</text>
+    
+      <text x="537.1428571428571" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 537.1428571428571 303)">131072</text>
+    
+      <text x="615" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 615 303)">262144</text>
+    
+  
+      <path d="M 70 223.048 L 147.85714285714286 222.00799999999998 L 225.71428571428572 219.89600000000002 L 303.57142857142856 215.672 L 381.42857142857144 207.224 L 459.28571428571433 190.32799999999997 L 537.1428571428571 156.536 L 615 88.952 L 615 285 L 70 285 Z" fill="#4f46e5" fill-opacity="0.08" />
+      <path d="M 70 223.048 L 147.85714285714286 222.00799999999998 L 225.71428571428572 219.89600000000002 L 303.57142857142856 215.672 L 381.42857142857144 207.224 L 459.28571428571433 190.32799999999997 L 537.1428571428571 156.536 L 615 88.952" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+        <circle cx="70" cy="223.048" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>2048 (llama.cpp f16 KV): 3872</title>
+        </circle>
+      
+        <circle cx="147.85714285714286" cy="222.00799999999998" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>4096 (llama.cpp f16 KV): 3937</title>
+        </circle>
+      
+        <circle cx="225.71428571428572" cy="219.89600000000002" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>8192 (llama.cpp f16 KV): 4069</title>
+        </circle>
+      
+        <circle cx="303.57142857142856" cy="215.672" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>16384 (llama.cpp f16 KV): 4333</title>
+        </circle>
+      
+        <circle cx="381.42857142857144" cy="207.224" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>32768 (llama.cpp f16 KV): 4861</title>
+        </circle>
+      
+        <circle cx="459.28571428571433" cy="190.32799999999997" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>65536 (llama.cpp f16 KV): 5917</title>
+        </circle>
+      
+        <circle cx="537.1428571428571" cy="156.536" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>131072 (llama.cpp f16 KV): 8029</title>
+        </circle>
+      
+        <circle cx="615" cy="88.952" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+          <title>262144 (llama.cpp f16 KV): 12253</title>
+        </circle>
+      
+      <path d="M 70 223.54399999999998 L 147.85714285714286 222.936 L 225.71428571428572 221.528 L 303.57142857142856 218.712 L 381.42857142857144 213.07999999999998 L 459.28571428571433 201.62400000000002 L 537.1428571428571 179.176 L 615 134.12 L 615 285 L 70 285 Z" fill="#059669" fill-opacity="0.08" />
+      <path d="M 70 223.54399999999998 L 147.85714285714286 222.936 L 225.71428571428572 221.528 L 303.57142857142856 218.712 L 381.42857142857144 213.07999999999998 L 459.28571428571433 201.62400000000002 L 537.1428571428571 179.176 L 615 134.12" fill="none" stroke="#059669" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+        <circle cx="70" cy="223.54399999999998" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>2048 (llama.cpp q8 KV): 3841</title>
+        </circle>
+      
+        <circle cx="147.85714285714286" cy="222.936" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>4096 (llama.cpp q8 KV): 3879</title>
+        </circle>
+      
+        <circle cx="225.71428571428572" cy="221.528" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>8192 (llama.cpp q8 KV): 3967</title>
+        </circle>
+      
+        <circle cx="303.57142857142856" cy="218.712" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>16384 (llama.cpp q8 KV): 4143</title>
+        </circle>
+      
+        <circle cx="381.42857142857144" cy="213.07999999999998" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>32768 (llama.cpp q8 KV): 4495</title>
+        </circle>
+      
+        <circle cx="459.28571428571433" cy="201.62400000000002" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>65536 (llama.cpp q8 KV): 5211</title>
+        </circle>
+      
+        <circle cx="537.1428571428571" cy="179.176" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>131072 (llama.cpp q8 KV): 6614</title>
+        </circle>
+      
+        <circle cx="615" cy="134.12" r="4" fill="#059669" stroke="#ffffff" stroke-width="2">
+          <title>262144 (llama.cpp q8 KV): 9430</title>
+        </circle>
+      
+      <path d="M 70 225.352 L 147.85714285714286 224.296 L 225.71428571428572 220.776 L 303.57142857142856 216.42399999999998 L 381.42857142857144 207.72 L 459.28571428571433 185.768 L 537.1428571428571 158.82399999999998 L 615 91.24000000000001 L 615 285 L 70 285 Z" fill="#d97706" fill-opacity="0.08" />
+      <path d="M 70 225.352 L 147.85714285714286 224.296 L 225.71428571428572 220.776 L 303.57142857142856 216.42399999999998 L 381.42857142857144 207.72 L 459.28571428571433 185.768 L 537.1428571428571 158.82399999999998 L 615 91.24000000000001" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    
+        <circle cx="70" cy="225.352" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>2048 (Ollama (stock)): 3728</title>
+        </circle>
+      
+        <circle cx="147.85714285714286" cy="224.296" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>4096 (Ollama (stock)): 3794</title>
+        </circle>
+      
+        <circle cx="225.71428571428572" cy="220.776" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>8192 (Ollama (stock)): 4014</title>
+        </circle>
+      
+        <circle cx="303.57142857142856" cy="216.42399999999998" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>16384 (Ollama (stock)): 4286</title>
+        </circle>
+      
+        <circle cx="381.42857142857144" cy="207.72" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>32768 (Ollama (stock)): 4830</title>
+        </circle>
+      
+        <circle cx="459.28571428571433" cy="185.768" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>65536 (Ollama (stock)): 6202</title>
+        </circle>
+      
+        <circle cx="537.1428571428571" cy="158.82399999999998" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>131072 (Ollama (stock)): 7886</title>
+        </circle>
+      
+        <circle cx="615" cy="91.24000000000001" r="4" fill="#d97706" stroke="#ffffff" stroke-width="2">
+          <title>262144 (Ollama (stock)): 12110</title>
+        </circle>
+      
+  
+      <rect x="135" y="29" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="149" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">llama.cpp f16 KV</text>
+    
+      <rect x="304" y="29" width="10" height="10" fill="#059669" rx="2" />
+      <text x="318" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">llama.cpp q8 KV</text>
+    
+      <rect x="464" y="29" width="10" height="10" fill="#d97706" rx="2" />
+      <text x="478" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">Ollama (stock)</text>
+    
+</svg>
