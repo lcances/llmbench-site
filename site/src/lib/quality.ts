@@ -11,9 +11,12 @@ const TOP_COUNT = 5;
 
 export interface Benchmark {
   id: string;
+  slug: string;
   name: string;
   category: string;
   description: string;
+  /** Where the benchmark comes from: its paper, repo or site; "" when unknown. */
+  sourceUrl: string;
   higherIsBetter: boolean;
   unit: string;
 }
@@ -80,6 +83,9 @@ export function modelSlug(id: string): string {
   return id.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+/** URL segment for a benchmark: "swe_bench_verified" → "swe-bench-verified". */
+export const benchmarkSlug = modelSlug;
+
 // The extraction tool writes Python's None as the text 'None' in some columns.
 function text(v: unknown): string | null {
   return v === null || v === undefined || v === 'None' || v === '' ? null : String(v);
@@ -104,9 +110,11 @@ function load(): QualityData {
     for (const r of db.prepare('SELECT * FROM benchmarks').all()) {
       benchmarks.set(String(r.id), {
         id: String(r.id),
+        slug: benchmarkSlug(String(r.id)),
         name: String(r.name),
         category: text(r.category) ?? 'General',
         description: text(r.description) ?? '',
+        sourceUrl: text(r.source_url) ?? '',
         higherIsBetter: Number(r.higher_is_better) !== 0,
         unit: text(r.unit) ?? 'score',
       });
@@ -201,6 +209,11 @@ function load(): QualityData {
       if (slugs.has(m.slug)) throw new Error(`Two models share the URL slug "${m.slug}"`);
       slugs.add(m.slug);
     }
+    const benchmarkSlugs = new Set<string>();
+    for (const b of benchmarks.values()) {
+      if (benchmarkSlugs.has(b.slug)) throw new Error(`Two benchmarks share the URL slug "${b.slug}"`);
+      benchmarkSlugs.add(b.slug);
+    }
 
     const byName = (a: Model, b: Model) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' });
     const list = [...groups.values()].sort((a, b) => byName(a.model, b.model));
@@ -278,6 +291,25 @@ export function scoreMatrix(
 /** "Q4_K_M · unsloth" — how a quant is named next to its base model. */
 export function quantLabel(m: Model): string {
   return [m.targetQuant ?? m.quantMethod ?? m.name, m.author].filter(Boolean).join(' · ');
+}
+
+/** The page that shows a model: its group's page, at the build's section for a quant. */
+export function modelHref(groups: Group[]): Map<string, string> {
+  const href = new Map<string, string>();
+  for (const g of groups) {
+    href.set(g.model.id, `/models/${g.slug}/`);
+    for (const q of g.quants) href.set(q.id, `/models/${g.slug}/#${q.slug}`);
+  }
+  return href;
+}
+
+/** "arxiv.org" — the host a source link points to, for its label. */
+export function sourceHost(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
 }
 
 export function formatScore(n: number): string {

@@ -1,0 +1,224 @@
+---
+import Base from '../../layouts/Base.astro';
+import {
+  formatScore,
+  modelHref,
+  qualityData,
+  quantLabel,
+  sourceHost,
+  type Benchmark,
+  type Model,
+  type Score,
+} from '../../lib/quality';
+
+export function getStaticPaths() {
+  return [...qualityData().benchmarks.values()].map((benchmark) => ({
+    params: { benchmark: benchmark.slug },
+    props: { benchmark },
+  }));
+}
+
+interface Props {
+  benchmark: Benchmark;
+}
+
+const { benchmark } = Astro.props;
+const { groups } = qualityData();
+const href = modelHref(groups);
+
+// One row per (model, setting) with a score, best first.
+const rows: { model: Model; group: string; score: Score }[] = [];
+for (const g of groups) {
+  for (const m of [g.model, ...g.quants]) {
+    for (const s of m.scores) {
+      if (s.benchmarkId === benchmark.id) rows.push({ model: m, group: g.model.name, score: s });
+    }
+  }
+}
+const sign = benchmark.higherIsBetter ? -1 : 1;
+rows.sort(
+  (a, b) =>
+    (a.score.score - b.score.score) * sign ||
+    a.group.localeCompare(b.group) ||
+    a.score.setting.localeCompare(b.score.setting),
+);
+const name = (r: (typeof rows)[number]) => (r.model.quantMethod === null ? r.model.name : `${r.group} · ${quantLabel(r.model)}`);
+const modelTotal = new Set(rows.map((r) => r.model.id)).size;
+
+const facts: [string, string][] = [
+  ['ID', benchmark.id],
+  ['Category', benchmark.category],
+  ['Unit', benchmark.unit],
+  ['Better', benchmark.higherIsBetter ? 'higher' : 'lower'],
+];
+---
+
+<Base
+  title={benchmark.name}
+  description={benchmark.description || `Published scores of open LLMs on ${benchmark.name}.`}
+  current="benchmarks"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker"><a href="/benchmarks/">Benchmarks</a> / {benchmark.category}</div>
+      <h1>{benchmark.name}</h1>
+      {benchmark.description ? <p>{benchmark.description}</p> : <p class="bench-missing">No description yet.</p>}
+      {
+        benchmark.sourceUrl && (
+          <p class="bench-source">
+            Source: <a href={benchmark.sourceUrl}>{sourceHost(benchmark.sourceUrl)} ↗</a>
+          </p>
+        )
+      }
+      <dl class="facts">
+        {facts.map(([k, v]) => (
+          <>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </>
+        ))}
+      </dl>
+    </header>
+
+    <section class="qsection">
+      <h2>Published scores</h2>
+      <p class="qtable-note">
+        {rows.length} score{rows.length === 1 ? '' : 's'} from {modelTotal} model{modelTotal === 1 ? '' : 's'},
+        {benchmark.higherIsBetter ? ' highest' : ' lowest'} first, as their publishers report them. Settings and
+        harnesses differ between publishers, so close scores are not a ranking. Click a column to sort by it.
+      </p>
+      <form class="qfilters" id="scores-filters" role="search" hidden>
+        <label class="qfilter qfilter-search">
+          <span class="label">Search</span>
+          <input
+            type="search"
+            name="q"
+            placeholder="Model, setting or note: qwen, q4, reasoning"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+        <div class="qfilter-status">
+          <span id="scores-count" aria-live="polite"></span>
+          <button type="reset" class="qfilter-clear" hidden>Clear</button>
+        </div>
+      </form>
+      <div class="qtable-scroll">
+        <table
+          class="qtable detail"
+          id="scores-table"
+          data-lower={benchmark.higherIsBetter ? undefined : ''}
+        >
+          <thead>
+            <tr>
+              <th scope="col" data-col="0"><button type="button" class="sort">Model</button></th>
+              <th scope="col" data-col="1"><button type="button" class="sort">Setting</button></th>
+              <th scope="col" class="num" data-col="2" data-numeric aria-sort={benchmark.higherIsBetter ? 'descending' : 'ascending'}>
+                <button type="button" class="sort">Score</button>
+              </th>
+              <th scope="col" data-col="3"><button type="button" class="sort">As reported</button></th>
+              <th scope="col" data-col="4"><button type="button" class="sort">Source</button></th>
+              <th scope="col" data-col="5"><button type="button" class="sort">Notes</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rows.map((r) => (
+                <tr data-score={r.score.score}>
+                  <th scope="row">
+                    <a href={href.get(r.model.id)}>{name(r)}</a>
+                  </th>
+                  <td class="setting">{r.score.setting}</td>
+                  <td class="num">{formatScore(r.score.score)}</td>
+                  <td class="mono">{r.score.raw}</td>
+                  <td>
+                    {r.score.sourceUrl ? (
+                      <a href={r.score.sourceUrl}>{r.score.sourceType || 'link'}</a>
+                    ) : (
+                      r.score.sourceType
+                    )}
+                  </td>
+                  <td class="notes">{r.score.notes}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="qtable-empty" id="scores-empty" hidden>No score matches this search.</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { flat, matches, text } from '../../lib/fuzzy';
+
+  const table = document.getElementById('scores-table');
+  const body = table?.querySelector('tbody');
+  const rows = [...(body?.querySelectorAll<HTMLTableRowElement>('tr') ?? [])];
+  const cell = (r: HTMLTableRowElement, i: number) => (r.cells[i]?.textContent ?? '').trim();
+  const name = (r: HTMLTableRowElement) => cell(r, 0).toLowerCase();
+
+  // Search: every word typed must match some cell of the row (one typo
+  // allowed on words of 4+ letters).
+  const form = document.getElementById('scores-filters') as HTMLFormElement | null;
+  const count = document.getElementById('scores-count');
+  const empty = document.getElementById('scores-empty');
+  const clear = form?.querySelector<HTMLButtonElement>('.qfilter-clear');
+  const index = rows.map((row) => ({ row, t: text([...row.cells].map((c) => c.textContent).join(' ')) }));
+
+  function apply() {
+    if (!form) return;
+    const terms = String(new FormData(form).get('q') ?? '').split(/\s+/).map(flat).filter(Boolean);
+    let shown = 0;
+    for (const { row, t } of index) {
+      const ok = terms.every((term) => matches(term, t));
+      row.hidden = !ok;
+      if (ok) shown++;
+    }
+    if (count) count.textContent = terms.length > 0 ? `${shown} of ${rows.length} scores` : `${rows.length} scores`;
+    if (empty) empty.hidden = shown > 0;
+    if (clear) clear.hidden = terms.length === 0;
+  }
+
+  if (form) {
+    form.hidden = false;
+    form.addEventListener('input', apply);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    form.addEventListener('reset', () => setTimeout(apply)); // fields reset after the event
+    apply();
+  }
+
+  // Sorting by any column. Score: best first on the first click (lowest when
+  // lower is better); text: A to Z, numbers in text in numeric order. A second
+  // click reverses. Empty cells stay last; ties fall back to the model name.
+  const lowerIsBetter = table?.dataset.lower !== undefined;
+  const headers = [...(table?.querySelectorAll<HTMLElement>('th[data-col]') ?? [])];
+  headers.forEach((th) =>
+    th.querySelector('button')?.addEventListener('click', () => {
+      if (!body) return;
+      const col = Number(th.dataset.col);
+      const numeric = th.dataset.numeric !== undefined;
+      const first = numeric && !lowerIsBetter ? -1 : 1;
+      const current = th.getAttribute('aria-sort');
+      const dir = current === 'ascending' ? -1 : current === 'descending' ? 1 : first;
+      rows.sort((a, b) => {
+        if (numeric) {
+          return (Number(a.dataset.score) - Number(b.dataset.score)) * dir || name(a).localeCompare(name(b));
+        }
+        const va = cell(a, col);
+        const vb = cell(b, col);
+        if (va === '' || vb === '') {
+          if (va !== vb) return va === '' ? 1 : -1;
+        } else {
+          const c = va.localeCompare(vb, 'en', { numeric: true, sensitivity: 'base' });
+          if (c !== 0) return c * dir;
+        }
+        return name(a).localeCompare(name(b));
+      });
+      body.append(...rows);
+      headers.forEach((h) => h.removeAttribute('aria-sort'));
+      th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+    }),
+  );
+</script>

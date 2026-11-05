@@ -97,8 +97,8 @@ const scoreCount = models.reduce((n, m) => n + m.scores.length, 0);
                   </tr>
                   {rows.map((row) => (
                     <tr>
-                      <th scope="row" title={row.benchmark.description || undefined}>
-                        {row.benchmark.name}
+                      <th scope="row">
+                        <a href={`/benchmarks/${row.benchmark.slug}/`}>{row.benchmark.name}</a>
                         {!row.benchmark.higherIsBetter && <span class="label"> lower is better</span>}
                       </th>
                       <td class="setting">{row.setting}</td>
@@ -162,8 +162,8 @@ const scoreCount = models.reduce((n, m) => n + m.scores.length, 0);
                     )
                     .map(({ s, b }) => (
                       <tr>
-                        <th scope="row" title={b?.description || undefined}>
-                          {b?.name ?? s.benchmarkId}
+                        <th scope="row">
+                          {b ? <a href={`/benchmarks/${b.slug}/`}>{b.name}</a> : s.benchmarkId}
                         </th>
                         <td>{b?.category}</td>
                         <td class="setting">{s.setting}</td>

@@ -5,7 +5,7 @@ interface Props {
   title: string;
   description: string;
   image?: string;
-  current?: 'articles' | 'families' | 'models';
+  current?: 'articles' | 'families' | 'models' | 'benchmarks';
 }
 
 const { title, description, image, current } = Astro.props;
@@ -46,6 +46,7 @@ const ogImage = image ? new URL(image, Astro.site).href : undefined;
           <a href="/" aria-current={current === 'articles' ? 'page' : undefined}>Articles</a>
           <a href="/families/" aria-current={current === 'families' ? 'page' : undefined}>Families</a>
           <a href="/models/" aria-current={current === 'models' ? 'page' : undefined}>Models</a>
+          <a href="/benchmarks/" aria-current={current === 'benchmarks' ? 'page' : undefined}>Benchmarks</a>
           <a href="/rss.xml">RSS</a>
         </nav>
       </div>
