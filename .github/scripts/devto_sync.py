@@ -5,7 +5,13 @@ The writing app pushes `posts/<slug>/index.md` (dev.to markdown) and its PNGs in
 `posts/<slug>/images/` straight to main after its own review; this turns each
 changed post into a dev.to article. An article is created once, unpublished, and
 updated forever after — publishing it is done by hand on dev.to, and an update
-never sends `published`, so it can't pull a live article back to draft.
+never sends `published: false`, so it can't pull a live article back to draft.
+
+A post whose front matter has a future `published_at` (ISO 8601 with an offset)
+is scheduled instead: sent with `published: true` and that date, dev.to keeps it
+hidden until then. A past date sends neither, so a re-sync after the post went
+live never trips dev.to's "published_at can't change" check. Removing the date
+does not unschedule an article; that is done by hand on dev.to.
 
 The dev.to article id is recorded in `.devto/articles.json` and committed back by
 the workflow. A missing id is recovered by matching titles against the account's
@@ -27,6 +33,7 @@ import subprocess
 import sys
 import time
 import urllib.error
+from datetime import datetime, timezone
 import urllib.request
 from pathlib import Path
 
@@ -96,6 +103,22 @@ def split_front_matter(text):
                 value = value[1:-1]
             meta[key.strip()] = value
     return meta, body
+
+
+def schedule_from(value, slug):
+    """`published_at` as sent to dev.to when it is still ahead, else None."""
+    if not value:
+        return None
+    try:
+        when = datetime.fromisoformat(value)
+    except ValueError:
+        fail(f"{slug}: published_at {value!r} is not an ISO 8601 date")
+    if when.tzinfo is None:
+        fail(f"{slug}: published_at {value!r} has no time-zone offset")
+    if when <= datetime.now(timezone.utc):
+        notice(f"{slug}: published_at {value} is past; its publication is left as it is")
+        return None
+    return value
 
 
 def tags_from(tags):
@@ -225,6 +248,10 @@ def main():
             article["main_image"] = image_url(meta["cover"], md.parent, base, slug, missing)
             if missing:
                 fail(f"{slug}: no file for the cover {meta['cover']}")
+        scheduled = schedule_from(meta.get("published_at"), slug)
+        if scheduled:
+            article["published"] = True
+            article["published_at"] = scheduled
 
         article_id = (mapping.get(slug) or {}).get("id")
         if not article_id and key and not dry_run:
@@ -234,7 +261,7 @@ def main():
 
         if dry_run:
             notice(f"[dry run] would {'update ' + str(article_id) if article_id else 'create a draft for'}"
-                   f" {slug}")
+                   f" {slug}{', scheduled for ' + scheduled if scheduled else ''}")
             print(json.dumps({k: (v if k != "body_markdown" else v[:600] + " …")
                               for k, v in article.items()}, indent=2))
             continue
@@ -243,9 +270,10 @@ def main():
             got = request("PUT", f"/articles/{article_id}", key, {"article": article})
             notice(f"updated {slug} -> {got.get('url')}")
         else:
-            got = request("POST", "/articles", key, {"article": {**article, "published": False}})
+            # A scheduled post overrides the draft default.
+            got = request("POST", "/articles", key, {"article": {"published": False, **article}})
             article_id = got.get("id")
-            notice(f"created a draft for {slug} -> {got.get('url')}")
+            notice(f"created {'a scheduled post' if scheduled else 'a draft'} for {slug} -> {got.get('url')}")
         # Written after every article, not at the end: a crash must not lose an
         # id we have already spent a creation on.
         mapping[slug] = {"id": article_id, "url": got.get("url"), "series": SERIES}
