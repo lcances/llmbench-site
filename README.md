@@ -25,6 +25,10 @@ How content gets here:
   assets-only Cloudflare Worker, `site/wrangler.jsonc` (secrets
   `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`). Run it
   locally with `npm ci && npm run dev` in `site/`.
+- `/models/` lists published quality scores (model cards, papers) per model and
+  quant, built from `site/data/benchmarks.sqlite`, a copy of the private
+  benchmark repo's `results/quality/benchmarks.sqlite`. To refresh it, copy the
+  file over and push; the `site` workflow rebuilds the pages.
 - `templates/` holds the writing app's series templates.
 
 ## About the authoring

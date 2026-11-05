@@ -458,3 +458,436 @@ a:hover {
   font-size: 14px;
   color: var(--muted);
 }
+
+/* ---- quality scores: /models/ and /models/<slug>/ ---- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.qtable-scroll {
+  overflow-x: auto;
+  margin-top: 32px;
+}
+.qtable {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 15px;
+}
+.qtable thead tr {
+  border-bottom: 1px solid var(--ink);
+}
+.qtable th,
+.qtable td {
+  text-align: left;
+  padding: 10px 20px 10px 0;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.qtable thead th {
+  font-weight: 600;
+}
+.qtable tbody th {
+  font-weight: 500;
+}
+.qtable .num {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 14px;
+}
+.qtable .mono {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+.qtable .setting {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+.qtable .none {
+  color: var(--rule);
+}
+.qtable .label {
+  font-size: 11px;
+}
+.qtable a {
+  text-decoration: none;
+}
+.qtable a:hover {
+  text-decoration: underline;
+}
+.qtable-note {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 16px 0 0;
+}
+
+/* models table: a group is a tbody; its first row carries the rule above it */
+#models-table tbody tr.first {
+  border-top: 1px solid var(--rule);
+}
+#models-table tr.base {
+  cursor: default;
+}
+#models-table tbody[data-quants] tr.base {
+  cursor: pointer;
+}
+#models-table tbody[data-quants] tr.base:hover {
+  background: #fafafa;
+}
+#models-table tr.quant {
+  background: #f7f7f7;
+}
+#models-table tr.quant.first {
+  border-top-color: var(--rule-soft);
+}
+#models-table tr.quant th {
+  padding-left: 36px;
+  font-weight: 400;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+#models-table.collapsible tbody:not(.open) tr.quant {
+  display: none;
+}
+/* sortable headers: the whole label is the button */
+.qtable .sort {
+  all: unset;
+  cursor: pointer;
+  text-align: inherit;
+}
+.qtable .sort:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.qtable .sort:hover {
+  color: var(--accent);
+}
+.qtable .sort::after {
+  content: ' \2195';
+  color: #b5b5b5;
+  font-weight: 400;
+}
+.qtable th[aria-sort='ascending'] .sort::after {
+  content: ' \2191';
+  color: var(--accent);
+}
+.qtable th[aria-sort='descending'] .sort::after {
+  content: ' \2193';
+  color: var(--accent);
+}
+.quant-hint {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.model-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.toggle,
+.toggle-spacer {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  align-self: center;
+}
+.toggle {
+  border: 1px solid var(--rule);
+  background: var(--ground);
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transform: rotate(-45deg);
+}
+.toggle[aria-expanded='true']::after {
+  transform: rotate(45deg);
+  left: 5px;
+  top: 3px;
+}
+
+/* model page */
+.page-head .kicker a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.page-head .kicker a:hover {
+  color: var(--accent);
+}
+.qsection {
+  margin-top: 72px;
+  scroll-margin-top: 24px;
+}
+.qsection h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 8px 0 0;
+}
+.hf-link {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-decoration: none;
+  word-break: break-all;
+}
+.qtable.matrix tr.category th {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 28px;
+  border-bottom: 1px solid var(--rule);
+}
+.qtable.matrix tbody tr:not(.category),
+.qtable.detail tbody tr {
+  border-bottom: 1px solid var(--rule-soft);
+}
+.qtable.detail .notes {
+  white-space: normal;
+  min-width: 240px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 24px;
+  margin: 20px 0 0;
+  font-size: 14px;
+}
+.facts dt {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 2px;
+}
+.facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.qtable thead .num {
+  font-family: var(--sans);
+  font-size: 15px;
+  white-space: normal;
+  vertical-align: bottom;
+}
+
+/* models table, compact: tight rows, and the spare width goes to the model
+   column so each score sits right next to its header */
+#models-table {
+  font-size: 14px;
+}
+#models-table th,
+#models-table td {
+  padding: 5px 16px 5px 0;
+}
+#models-table thead th {
+  padding-bottom: 8px;
+}
+#models-table tbody tr.first > * {
+  padding-top: 9px;
+}
+#models-table tbody tr:last-child > * {
+  padding-bottom: 9px;
+}
+#models-table .num {
+  min-width: 76px;
+  font-size: 13px;
+}
+#models-table thead .num {
+  font-size: 14px;
+  line-height: 1.3;
+}
+#models-table tr.quant th {
+  padding-left: 30px;
+  font-size: 12px;
+}
+#models-table .setting {
+  font-size: 12px;
+}
+#models-table .quant-hint {
+  font-size: 12px;
+}
+#models-table {
+  line-height: 1.35;
+}
+#models-table tbody th,
+#models-table tbody td {
+  vertical-align: baseline;
+}
+#models-table .toggle,
+#models-table .toggle-spacer {
+  width: 14px;
+  height: 14px;
+}
+#models-table .toggle::after {
+  left: 3px;
+  top: 2.5px;
+}
+#models-table .toggle[aria-expanded='true']::after {
+  left: 3.5px;
+  top: 1.5px;
+}
+#models-table .model-cell {
+  gap: 8px;
+}
+/* sized to its content: the model column is as wide as its longest name */
+#models-table {
+  width: auto;
+}
+#models-table tbody th {
+  padding-right: 28px;
+}
+/* a long name pushes its "+ n quantized builds" hint to a second line rather
+   than widening the whole column */
+#models-table tbody th {
+  white-space: normal;
+}
+#models-table .model-cell {
+  display: flex;
+  max-width: 360px;
+}
+#models-table .model-text a,
+#models-table .model-text .quant-hint {
+  white-space: nowrap;
+}
+#models-table .model-text .quant-hint {
+  display: inline-block;
+  margin-left: 8px;
+}
+#models-table .model-cell .toggle,
+#models-table .model-cell .toggle-spacer {
+  align-self: flex-start;
+  margin-top: 3px;
+}
+
+/* models table: search and filters */
+.qfilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px 24px;
+  margin-top: 32px;
+}
+.qfilters[hidden] {
+  display: none;
+}
+.qfilter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.qfilter .label {
+  color: var(--muted);
+}
+.qfilter-search {
+  flex: 1 1 320px;
+}
+.qfilter input[type='search'],
+.qfilter select {
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--ground);
+  border: 1px solid var(--rule);
+  height: 40px;
+  padding: 0 10px;
+  max-width: 100%;
+}
+.qfilter select {
+  max-width: 280px;
+}
+.qfilter input[type='search']:focus,
+.qfilter select:focus {
+  border-color: var(--ink);
+  outline: none;
+}
+.qfilter-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  padding-bottom: 9px;
+  cursor: pointer;
+}
+.qfilter-check input {
+  accent-color: var(--accent);
+  margin: 0;
+}
+.qfilter-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+  padding-bottom: 9px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+.qfilter-clear {
+  all: unset;
+  cursor: pointer;
+  color: var(--accent);
+}
+.qfilter-clear:hover {
+  color: var(--accent-ink);
+  text-decoration: underline;
+}
+.qfilter-clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.qfilter-clear[hidden] {
+  display: none;
+}
+.qstats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 32px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.qtable-empty {
+  margin: 24px 0 0;
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  .qfilter,
+  .qfilter select {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+  .qfilter-check {
+    flex: 0 1 auto;
+  }
+  .qfilter-status {
+    margin-left: 0;
+  }
+}

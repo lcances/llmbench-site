@@ -1,0 +1,189 @@
+---
+import Base from '../../layouts/Base.astro';
+import {
+  formatScore,
+  qualityData,
+  quantLabel,
+  scoreMatrix,
+  type Group,
+  type Model,
+} from '../../lib/quality';
+
+export function getStaticPaths() {
+  return qualityData().groups.map((group) => ({ params: { model: group.slug }, props: { group } }));
+}
+
+interface Props {
+  group: Group;
+}
+
+const { group } = Astro.props;
+const { benchmarks } = qualityData();
+const models: Model[] = [group.model, ...group.quants].filter((m) => m.inDatabase);
+const matrix = scoreMatrix(models, benchmarks);
+const columnName = (m: Model) => (m === group.model ? 'Base' : quantLabel(m));
+
+function facts(m: Model): [string, string][] {
+  const list = (v: unknown) => (Array.isArray(v) && v.length > 0 ? v.join(', ') : '');
+  const rows: [string, string][] = [
+    ['ID', m.id],
+    ['Author', m.author ?? ''],
+    ['Base model', m.baseModel ?? ''],
+    ['Pipeline', m.pipelineTag ?? ''],
+    ['Parameters', m.params === null ? '' : `${m.params}B`],
+    ['Quant method', m.quantMethod ?? ''],
+    ['Target quant', m.targetQuant ?? ''],
+    ['imatrix', m.imatrix === null || m.quantMethod === null ? '' : m.imatrix ? 'yes' : 'no'],
+    ['Matched files', list(m.meta.matched_files)],
+    ['Available quants', list(m.meta.available_quants)],
+    ['Tags', m.tags.join(', ')],
+  ];
+  return rows.filter(([, v]) => v !== '');
+}
+
+const hf = (repo: string) => `https://huggingface.co/${repo}`;
+const scoreCount = models.reduce((n, m) => n + m.scores.length, 0);
+---
+
+<Base
+  title={group.model.name}
+  description={`Every published quality score for ${group.model.name} and its quantized builds.`}
+  current="models"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker"><a href="/models/">Models</a>{group.model.author && ` / ${group.model.author}`}</div>
+      <h1>{group.model.name}</h1>
+      <p>
+        {scoreCount} published score{scoreCount === 1 ? '' : 's'} across {models.length} build{
+          models.length === 1 ? '' : 's'
+        }, as reported by their publishers. Not measured here.
+      </p>
+      {
+        !group.model.inDatabase && (
+          <p>
+            The base model, <a href={hf(group.model.id)}>{group.model.id}</a>, is not in the
+            database; only its quantized builds are.
+          </p>
+        )
+      }
+    </header>
+
+    <section class="qsection">
+      <h2>All scores side by side</h2>
+      {
+        matrix.length === 0 ? (
+          <p class="label">No scores yet.</p>
+        ) : (
+          <div class="qtable-scroll">
+            <table class="qtable matrix">
+              <thead>
+                <tr>
+                  <th scope="col">Benchmark</th>
+                  <th scope="col">Setting</th>
+                  {models.map((m) => (
+                    <th scope="col" class="num">
+                      <a href={`#${m.slug}`}>{columnName(m)}</a>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              {matrix.map(({ category, rows }) => (
+                <tbody>
+                  <tr class="category">
+                    <th scope="colgroup" colspan={models.length + 2}>
+                      {category}
+                    </th>
+                  </tr>
+                  {rows.map((row) => (
+                    <tr>
+                      <th scope="row" title={row.benchmark.description || undefined}>
+                        {row.benchmark.name}
+                        {!row.benchmark.higherIsBetter && <span class="label"> lower is better</span>}
+                      </th>
+                      <td class="setting">{row.setting}</td>
+                      {row.cells.map((s) => (
+                        <td class="num">{s ? formatScore(s.score) : <span class="none">—</span>}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              ))}
+            </table>
+          </div>
+        )
+      }
+    </section>
+
+    {
+      models.map((m) => (
+        <section class="qsection" id={m.slug}>
+          <div class="kicker">{m === group.model ? 'Base model' : 'Quantized build'}</div>
+          <h2>
+            {m === group.model ? m.name : quantLabel(m)}{' '}
+            <a class="hf-link" href={hf(m.hfRepo)}>
+              {m.hfRepo} ↗
+            </a>
+          </h2>
+          <dl class="facts">
+            {facts(m).map(([k, v]) => (
+              <>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </>
+            ))}
+          </dl>
+          {m.scores.length === 0 ? (
+            <p class="label">No published scores for this build.</p>
+          ) : (
+            <div class="qtable-scroll">
+              <table class="qtable detail">
+                <thead>
+                  <tr>
+                    <th scope="col">Benchmark</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Setting</th>
+                    <th scope="col" class="num">Score</th>
+                    <th scope="col">As reported</th>
+                    <th scope="col">Unit</th>
+                    <th scope="col">Source</th>
+                    <th scope="col">Notes</th>
+                    <th scope="col">Extracted</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...m.scores]
+                    .map((s) => ({ s, b: benchmarks.get(s.benchmarkId) }))
+                    .sort(
+                      (x, y) =>
+                        (x.b?.category ?? '').localeCompare(y.b?.category ?? '') ||
+                        (x.b?.name ?? x.s.benchmarkId).localeCompare(y.b?.name ?? y.s.benchmarkId) ||
+                        x.s.setting.localeCompare(y.s.setting),
+                    )
+                    .map(({ s, b }) => (
+                      <tr>
+                        <th scope="row" title={b?.description || undefined}>
+                          {b?.name ?? s.benchmarkId}
+                        </th>
+                        <td>{b?.category}</td>
+                        <td class="setting">{s.setting}</td>
+                        <td class="num">{formatScore(s.score)}</td>
+                        <td class="mono">{s.raw}</td>
+                        <td>
+                          {b?.unit}
+                          {b && !b.higherIsBetter && ' (lower is better)'}
+                        </td>
+                        <td>{s.sourceUrl ? <a href={s.sourceUrl}>{s.sourceType || 'link'}</a> : s.sourceType}</td>
+                        <td class="notes">{s.notes}</td>
+                        <td class="mono">{s.extractedAt.slice(0, 10)}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      ))
+    }
+  </div>
+</Base>

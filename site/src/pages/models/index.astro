@@ -1,0 +1,356 @@
+---
+import Base from '../../layouts/Base.astro';
+import { formatScore, qualityData, quantLabel, variantRows } from '../../lib/quality';
+
+const { benchmarks, top, groups } = qualityData();
+const topIds = top.map((b) => b.id);
+
+// Search and filter data. A group (a model and its quants) is the unit that
+// shows or hides: its author, the benchmarks any of its models has a score
+// for, and the text the search box matches, kept apart for the quants so a
+// match on a quant alone can unfold the group.
+const groupBenchmarks = groups.map(
+  (g) => new Set([g.model, ...g.quants].flatMap((m) => m.scores.map((s) => s.benchmarkId))),
+);
+const authors = [...new Set(groups.flatMap((g) => (g.model.author ? [g.model.author] : [])))].sort((a, b) =>
+  a.localeCompare(b, 'en', { sensitivity: 'base' }),
+);
+const benchmarkCount = new Map<string, number>();
+for (const set of groupBenchmarks) for (const id of set) benchmarkCount.set(id, (benchmarkCount.get(id) ?? 0) + 1);
+const benchmarkOptions = new Map<string, { id: string; name: string; n: number }[]>();
+for (const [id, n] of benchmarkCount) {
+  const b = benchmarks.get(id);
+  if (!b) continue;
+  benchmarkOptions.set(b.category, [...(benchmarkOptions.get(b.category) ?? []), { id, name: b.name, n }]);
+}
+const quantCount = groups.reduce((n, g) => n + g.quants.length, 0);
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const stats = [
+  plural(groups.length, 'base model'),
+  plural(quantCount, 'quantized build'),
+  plural(benchmarkCount.size, 'benchmark'),
+];
+const benchmarkGroups = [...benchmarkOptions]
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([category, list]) => ({
+    category,
+    list: list.sort((a, b) => b.n - a.n || a.name.localeCompare(b.name)),
+  }));
+
+/** A model's sort value for a column: its best score over all its settings. */
+function best(rows: ReturnType<typeof variantRows>, i: number): string | undefined {
+  const b = top[i];
+  const values = rows.flatMap((r) => (r.cells.has(b.id) ? [r.cells.get(b.id)!.score] : []));
+  if (values.length === 0) return undefined;
+  return String(b.higherIsBetter ? Math.max(...values) : Math.min(...values));
+}
+---
+
+<Base
+  title="Models"
+  description="Published quality scores of open LLMs and their quantized builds, from model cards and papers."
+  current="models"
+>
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker">Models</div>
+      <h1>Published quality scores, per model and quant</h1>
+      <p>
+        Scores as the publishers report them, in model cards, papers and blog posts. They are not
+        measured here. Click a row to show its quantized builds. Open a model for every score we have.
+      </p>
+      <ul class="qstats">
+        {stats.map((s) => <li>{s}</li>)}
+      </ul>
+    </header>
+
+    <form class="qfilters" id="models-filters" role="search" hidden>
+      <label class="qfilter qfilter-search">
+        <span class="label">Search</span>
+        <input
+          type="search"
+          name="q"
+          placeholder="Name, author or quant: gemma 31b, qwen q4, unsloth"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </label>
+      <label class="qfilter">
+        <span class="label">Author</span>
+        <select name="author">
+          <option value="">All authors</option>
+          {authors.map((a) => <option value={a}>{a}</option>)}
+        </select>
+      </label>
+      <label class="qfilter">
+        <span class="label">Has a score for</span>
+        <select name="benchmark">
+          <option value="">Any benchmark</option>
+          {
+            benchmarkGroups.map((c) => (
+              <optgroup label={c.category}>
+                {c.list.map((b) => (
+                  <option value={b.id}>
+                    {b.name} ({b.n})
+                  </option>
+                ))}
+              </optgroup>
+            ))
+          }
+        </select>
+      </label>
+      <label class="qfilter qfilter-check">
+        <input type="checkbox" name="quants" />
+        <span>Has quantized builds</span>
+      </label>
+      <div class="qfilter-status">
+        <span id="models-count" aria-live="polite"></span>
+        <button type="reset" class="qfilter-clear" hidden>Clear</button>
+      </div>
+    </form>
+
+    <div class="qtable-scroll">
+      <table class="qtable" id="models-table">
+        <thead>
+          <tr>
+            <th scope="col" data-sort="name" aria-sort="ascending">
+              <button type="button" class="sort">Model</button>
+            </th>
+            <th scope="col">Setting</th>
+            {
+              top.map((b, i) => (
+                <th scope="col" class="num" data-sort={String(i)} data-lower={b.higherIsBetter ? undefined : ''}>
+                  <button type="button" class="sort">{b.name}</button>
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        {
+          groups.map((g, gi) => {
+            const baseRows = variantRows(g.model, topIds);
+            return (
+              <tbody
+                class="group"
+                data-quants={g.quants.length > 0 ? '' : undefined}
+                data-name={g.model.name.toLowerCase()}
+                data-author={g.model.author ?? ''}
+                data-benchmarks={[...groupBenchmarks[gi]].join(' ')}
+                data-search={[g.model.name, g.model.id, g.model.author].filter(Boolean).join(' ')}
+                data-search-quants={g.quants.map((q) => `${quantLabel(q)} ${q.id}`).join(' ')}
+                {...Object.fromEntries(top.map((_, i) => [`data-v${i}`, best(baseRows, i)]))}
+              >
+                {baseRows.map((row, i) => (
+                  <tr class:list={['base', { first: i === 0 }]}>
+                    <th scope="row">
+                      {i === 0 && (
+                        <span class="model-cell">
+                          {g.quants.length > 0 ? (
+                            <button type="button" class="toggle" aria-expanded="false">
+                              <span class="sr-only">Show quants of {g.model.name}</span>
+                            </button>
+                          ) : (
+                            <span class="toggle-spacer" />
+                          )}
+                          <span class="model-text">
+                            <a href={`/models/${g.slug}/`}>{g.model.name}</a>
+                            {g.quants.length > 0 && (
+                              <span class="quant-hint">
+                                + {g.quants.length} quantized build{g.quants.length === 1 ? '' : 's'}
+                              </span>
+                            )}
+                          </span>
+                        </span>
+                      )}
+                    </th>
+                    <td class="setting">{row.setting}</td>
+                    {top.map((b) => {
+                      const s = row.cells.get(b.id);
+                      return <td class="num">{s ? formatScore(s.score) : <span class="none">—</span>}</td>;
+                    })}
+                  </tr>
+                ))}
+                {g.quants.flatMap((q) =>
+                  variantRows(q, topIds).map((row, i) => (
+                    <tr class:list={['quant', { first: i === 0 }]}>
+                      <th scope="row">
+                        {i === 0 && (
+                          <a href={`/models/${g.slug}/#${q.slug}`}>{quantLabel(q)}</a>
+                        )}
+                      </th>
+                      <td class="setting">{row.setting}</td>
+                      {top.map((b) => {
+                        const s = row.cells.get(b.id);
+                        return <td class="num">{s ? formatScore(s.score) : <span class="none">—</span>}</td>;
+                      })}
+                    </tr>
+                  )),
+                )}
+              </tbody>
+            );
+          })
+        }
+      </table>
+    </div>
+    <p class="qtable-empty" id="models-empty" hidden>No model matches these filters.</p>
+    <p class="qtable-note">
+      Columns: the {top.length} benchmarks with scores for the most models. A model with scores under
+      several settings (reasoning on/off, effort level, shots) gets one row per setting; sorting by a
+      benchmark uses its best one. Models without a score for that benchmark go last.
+    </p>
+  </div>
+</Base>
+
+<script>
+  // Quant rows start folded once this runs; without JavaScript they stay visible.
+  const table = document.getElementById('models-table');
+  table?.classList.add('collapsible');
+  table?.querySelectorAll<HTMLElement>('tbody[data-quants]').forEach((body) => {
+    const button = body.querySelector('.toggle');
+    body.querySelectorAll('tr.base').forEach((row) =>
+      row.addEventListener('click', (e) => {
+        if ((e.target as Element).closest('a')) return;
+        const open = body.classList.toggle('open');
+        button?.setAttribute('aria-expanded', String(open));
+        delete body.dataset.autoOpen; // the reader chose; search leaves it alone
+      }),
+    );
+  });
+
+  // Search and filters. Every word typed must match the model's name, id or
+  // author, or one of its quants' labels. Matching ignores case and
+  // punctuation ("gemma4" finds "gemma-4"), and a word of 4+ letters also
+  // matches with one typo ("qewn", "gema"). A group that matches only through
+  // a quant unfolds to show it, and folds again when the search changes.
+  const form = document.getElementById('models-filters') as HTMLFormElement | null;
+  const count = document.getElementById('models-count');
+  const empty = document.getElementById('models-empty');
+  const clear = form?.querySelector<HTMLButtonElement>('.qfilter-clear');
+  const bodies = [...(table?.querySelectorAll<HTMLElement>('tbody.group') ?? [])];
+
+  const flat = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const words = (s: string) => s.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+
+  /** Optimal string alignment distance, at most 1 (an edit or a swap). */
+  function oneEdit(a: string, b: string): boolean {
+    if (Math.abs(a.length - b.length) > 1) return false;
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...new Array<number>(b.length).fill(0)]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+          d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+        }
+      }
+    }
+    return d[a.length][b.length] <= 1;
+  }
+
+  interface Text {
+    flat: string;
+    words: string[];
+  }
+  const text = (s: string): Text => ({ flat: flat(s), words: words(s) });
+
+  /** A typed word matches a text when it is part of it, or one typo away from a word in it (or that word's start). */
+  function matches(term: string, t: Text): boolean {
+    if (t.flat.includes(term)) return true;
+    if (term.length < 4) return false;
+    return t.words.some((w) => oneEdit(term, w) || (w.length > term.length && oneEdit(term, w.slice(0, term.length))));
+  }
+
+  const index = bodies.map((body) => ({
+    body,
+    base: text(body.dataset.search ?? ''),
+    quants: text(body.dataset.searchQuants ?? ''),
+    author: body.dataset.author ?? '',
+    benchmarks: new Set((body.dataset.benchmarks ?? '').split(' ')),
+    hasQuants: body.dataset.quants !== undefined,
+  }));
+
+  function setOpen(body: HTMLElement, open: boolean) {
+    body.classList.toggle('open', open);
+    body.querySelector('.toggle')?.setAttribute('aria-expanded', String(open));
+  }
+
+  function apply() {
+    if (!form) return;
+    const data = new FormData(form);
+    const terms = String(data.get('q') ?? '').split(/\s+/).map(flat).filter(Boolean);
+    const author = String(data.get('author') ?? '');
+    const benchmark = String(data.get('benchmark') ?? '');
+    const quantsOnly = data.get('quants') !== null;
+
+    let shown = 0;
+    for (const g of index) {
+      let viaQuant = false;
+      const ok =
+        (!author || g.author === author) &&
+        (!benchmark || g.benchmarks.has(benchmark)) &&
+        (!quantsOnly || g.hasQuants) &&
+        terms.every((term) => {
+          if (matches(term, g.base)) return true;
+          if (g.hasQuants && matches(term, g.quants)) return (viaQuant = true);
+          return false;
+        });
+      g.body.hidden = !ok;
+      if (ok) shown++;
+
+      if (ok && viaQuant && !g.body.classList.contains('open')) {
+        setOpen(g.body, true);
+        g.body.dataset.autoOpen = '';
+      } else if (!(ok && viaQuant) && g.body.dataset.autoOpen !== undefined) {
+        setOpen(g.body, false);
+        delete g.body.dataset.autoOpen;
+      }
+    }
+
+    const active = terms.length > 0 || author !== '' || benchmark !== '' || quantsOnly;
+    if (count) count.textContent = active ? `${shown} of ${index.length} base models` : `${index.length} base models`;
+    if (empty) empty.hidden = shown > 0;
+    if (clear) clear.hidden = !active;
+  }
+
+  if (form) {
+    form.hidden = false;
+    form.addEventListener('input', apply);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    form.addEventListener('reset', () => setTimeout(apply)); // fields reset after the event
+    apply();
+  }
+
+  // Sorting moves whole groups (a model with its settings and quants). Scores
+  // sort best first on the first click, names A to Z; a second click reverses.
+  // Missing scores stay last either way; ties fall back to the name.
+  const headers = [...(table?.querySelectorAll<HTMLElement>('th[data-sort]') ?? [])];
+  headers.forEach((th) =>
+    th.querySelector('button')?.addEventListener('click', () => {
+      if (!table) return;
+      const key = th.dataset.sort!;
+      const isName = key === 'name';
+      const bestFirst = isName || th.dataset.lower !== undefined ? 1 : -1;
+      const current = th.getAttribute('aria-sort');
+      const dir = current === 'ascending' ? -1 : current === 'descending' ? 1 : bestFirst;
+      const bodies = [...table.querySelectorAll<HTMLElement>('tbody.group')];
+      const name = (b: HTMLElement) => b.dataset.name ?? '';
+      bodies.sort((a, b) => {
+        if (!isName) {
+          const va = a.dataset[`v${key}`];
+          const vb = b.dataset[`v${key}`];
+          if (va === undefined || vb === undefined) {
+            if (va !== vb) return va === undefined ? 1 : -1;
+          } else if (Number(va) !== Number(vb)) {
+            return (Number(va) - Number(vb)) * dir;
+          }
+          return name(a).localeCompare(name(b));
+        }
+        return name(a).localeCompare(name(b)) * dir;
+      });
+      table.append(...bodies);
+      headers.forEach((h) => h.removeAttribute('aria-sort'));
+      th.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+    }),
+  );
+</script>
