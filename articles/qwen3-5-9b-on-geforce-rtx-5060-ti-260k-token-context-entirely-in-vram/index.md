@@ -150,8 +150,4 @@ We ran the same model in several setups: Ollama exactly as installed, stock llam
 
 ## Further Reading
 
-[Read the short 5-minute article about this model](MODEL-SHORT-ARTICLE-URL)
-
-[Read the previous article in the series](PREVIOUS-ARTICLE-URL)
-
-[Read the next article in the series](NEXT-ARTICLE-URL)
+-
