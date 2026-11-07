@@ -13,5 +13,10 @@
     "id": 4971571,
     "series": "llmbench",
     "url": "https://dev.to/elcances/qwen35-4b-on-a-16-gb-rtx-5060-ti-823-tokens-per-second-for-16-users-42d4-temp-slug-2446180"
+  },
+  "qwen3-5-9b-on-rtx-5060-ti-260k-tokens-of-context-in-16-gb": {
+    "id": 4993823,
+    "series": "llmbench",
+    "url": "https://dev.to/elcances/qwen35-9b-on-rtx-5060-ti-260k-tokens-of-context-in-16-gb-1dmj"
   }
 }
