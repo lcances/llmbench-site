@@ -39,6 +39,7 @@ from pathlib import Path
 
 API = "https://dev.to/api"
 SERIES = "llmbench"
+AI_DISCLOSURE = "some_ai"   # dev.to's "AI" field: no_ai | some_ai | fully_autonomous
 MAPPING = Path(".devto/articles.json")
 POSTS = Path("posts")
 PAUSE_S = 3          # Forem throttles article writes; be a good citizen.
@@ -240,6 +241,7 @@ def main():
             "body_markdown": transform(body, md.parent, base, slug),
             "series": SERIES,
             "tags": tags_from(meta.get("tags")),
+            "ai_disclosure_level": AI_DISCLOSURE,
         }
         if meta.get("description"):
             article["description"] = meta["description"]
