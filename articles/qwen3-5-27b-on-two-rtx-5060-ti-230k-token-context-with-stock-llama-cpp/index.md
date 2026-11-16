@@ -4,7 +4,7 @@ description: "qwen3.5-27b on two RTX 5060 Ti: 230k-token context with stock llam
 tags: ["ai", "llm", "benchmark", "devops", "performance"]
 cover: "images/cover.png"
 issue: "efdc76e2-def5-4f5e-b859-f94f0b4cb956"
-date: "2026-11-23"
+date: "2026-11-16"
 series: "Qwen3.5"
 ---
 
