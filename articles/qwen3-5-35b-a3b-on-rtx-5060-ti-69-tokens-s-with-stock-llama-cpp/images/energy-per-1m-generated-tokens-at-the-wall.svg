@@ -1,0 +1,40 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="18" font-weight="600" fill="#111827" font-family="sans-serif">Energy per 1M generated tokens (at the wall)</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif">runtime</text>
+  <text x="18" y="165" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">kWh per 1M generated tokens</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0.0</text>
+    
+      <line x1="70" y1="237" x2="615" y2="237" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="241" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0.2</text>
+    
+      <line x1="70" y1="189" x2="615" y2="189" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="193" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0.4</text>
+    
+      <line x1="70" y1="141" x2="615" y2="141" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="145" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0.6</text>
+    
+      <line x1="70" y1="93" x2="615" y2="93" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="97" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0.8</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">1.0</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="206.25" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 206.25 303)">llama.cpp@b11960</text>
+    
+        <rect x="188.25" y="84.06" width="35" height="200.94" fill="#4f46e5" rx="3" ry="3">
+          <title>llama.cpp@b11960 (translations.energy.kwh_per_1m_gen): 0.84</title>
+        </rect>
+      
+      <text x="478.75" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 478.75 303)">ollama@v0.40.13</text>
+    
+        <rect x="460.75" y="67.36079999999998" width="35" height="217.63920000000002" fill="#4f46e5" rx="3" ry="3">
+          <title>ollama@v0.40.13 (translations.energy.kwh_per_1m_gen): 0.91</title>
+        </rect>
+      
+  
+</svg>

@@ -1,0 +1,82 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="18" font-weight="600" fill="#111827" font-family="sans-serif">Decode speed vs context size</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif">prompt tokens in context</text>
+  <text x="18" y="165" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">decode tok/s (median)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="225" x2="615" y2="225" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="229" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">20</text>
+    
+      <line x1="70" y1="165" x2="615" y2="165" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="169" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">40</text>
+    
+      <line x1="70" y1="105" x2="615" y2="105" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="109" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">60</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">80</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="138.125" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 138.125 303)">512</text>
+    
+        <rect x="90.4375" y="88.03199999999998" width="30.791666666666668" height="196.96800000000002" fill="#4f46e5" rx="3" ry="3">
+          <title>512 (llama.cpp/Ollama): 65.66</title>
+        </rect>
+      
+        <rect x="122.22916666666667" y="77.178" width="30.791666666666668" height="207.822" fill="#059669" rx="3" ry="3">
+          <title>512 (llama.cpp stock): 69.27</title>
+        </rect>
+      
+        <rect x="154.02083333333334" y="75.22500000000002" width="30.791666666666668" height="209.77499999999998" fill="#d97706" rx="3" ry="3">
+          <title>512 (Ollama (stock)): 69.92</title>
+        </rect>
+      
+      <text x="274.375" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 274.375 303)">2048</text>
+    
+        <rect x="226.6875" y="80.232" width="30.791666666666668" height="204.768" fill="#4f46e5" rx="3" ry="3">
+          <title>2048 (llama.cpp/Ollama): 68.26</title>
+        </rect>
+      
+        <rect x="258.4791666666667" y="78.29700000000003" width="30.791666666666668" height="206.70299999999997" fill="#059669" rx="3" ry="3">
+          <title>2048 (llama.cpp stock): 68.9</title>
+        </rect>
+      
+        <rect x="290.2708333333333" y="72.57900000000001" width="30.791666666666668" height="212.421" fill="#d97706" rx="3" ry="3">
+          <title>2048 (Ollama (stock)): 70.81</title>
+        </rect>
+      
+      <text x="410.625" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 410.625 303)">8192</text>
+    
+        <rect x="362.9375" y="88.464" width="30.791666666666668" height="196.536" fill="#4f46e5" rx="3" ry="3">
+          <title>8192 (llama.cpp/Ollama): 65.51</title>
+        </rect>
+      
+        <rect x="394.7291666666667" y="84.81299999999999" width="30.791666666666668" height="200.187" fill="#059669" rx="3" ry="3">
+          <title>8192 (llama.cpp stock): 66.73</title>
+        </rect>
+      
+        <rect x="426.5208333333333" y="77.89500000000001" width="30.791666666666668" height="207.105" fill="#d97706" rx="3" ry="3">
+          <title>8192 (Ollama (stock)): 69.03</title>
+        </rect>
+      
+      <text x="546.875" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 546.875 303)">32768</text>
+    
+        <rect x="562.7708333333334" y="96.12" width="30.791666666666668" height="188.88" fill="#d97706" rx="3" ry="3">
+          <title>32768 (Ollama (stock)): 62.96</title>
+        </rect>
+      
+  
+      <rect x="135" y="29" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="149" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">llama.cpp/Ollama</text>
+    
+      <rect x="304" y="29" width="10" height="10" fill="#059669" rx="2" />
+      <text x="318" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">llama.cpp stock</text>
+    
+      <rect x="464" y="29" width="10" height="10" fill="#d97706" rx="2" />
+      <text x="478" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">Ollama (stock)</text>
+    
+</svg>

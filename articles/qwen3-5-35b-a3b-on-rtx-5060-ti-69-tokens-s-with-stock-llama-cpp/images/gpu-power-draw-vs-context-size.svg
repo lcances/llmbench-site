@@ -1,0 +1,47 @@
+<svg viewBox="0 0 640 360" width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="640" height="360" fill="#ffffff" />
+  <text x="70" y="24" font-size="18" font-weight="600" fill="#111827" font-family="sans-serif">GPU power draw vs context size</text>
+  <text x="342.5" y="352" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif">prompt tokens in context</text>
+  <text x="18" y="165" text-anchor="middle" font-size="14" font-weight="500" fill="#374151" font-family="sans-serif" transform="rotate(-90 18 165)">average GPU power (W)</text>
+  
+      <line x1="70" y1="285" x2="615" y2="285" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="289" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">0</text>
+    
+      <line x1="70" y1="237" x2="615" y2="237" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="241" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">20</text>
+    
+      <line x1="70" y1="189" x2="615" y2="189" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="193" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">40</text>
+    
+      <line x1="70" y1="141" x2="615" y2="141" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="145" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">60</text>
+    
+      <line x1="70" y1="93" x2="615" y2="93" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="97" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">80</text>
+    
+      <line x1="70" y1="45" x2="615" y2="45" stroke="#e5e7eb" stroke-dasharray="3,3" />
+      <text x="62" y="49" text-anchor="end" font-size="14" fill="#6b7280" font-family="sans-serif">100</text>
+    
+  <line x1="70" y1="285" x2="615" y2="285" stroke="#9ca3af" stroke-width="1" />
+  
+      <text x="70" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 70 303)">512</text>
+    
+      <text x="251.66666666666666" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 251.66666666666666 303)">2048</text>
+    
+      <text x="433.3333333333333" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 433.3333333333333 303)">8192</text>
+    
+      <text x="615" y="303" text-anchor="middle" font-size="14" fill="#4b5563" font-family="sans-serif" transform="rotate(-25 615 303)">32768</text>
+    
+  <path d="M 70 98.03999999999999 L 251.66666666666666 103.07999999999998 L 433.3333333333333 95.63999999999999 L 433.3333333333333 285 L 70 285 Z" fill="#4f46e5" fill-opacity="0.08" />
+      <path d="M 70 98.03999999999999 L 251.66666666666666 103.07999999999998 L 433.3333333333333 95.63999999999999" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    <circle cx="70" cy="98.03999999999999" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2"><title>512 (llama.cpp stock): 77.9</title></circle><circle cx="251.66666666666666" cy="103.07999999999998" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2"><title>2048 (llama.cpp stock): 75.8</title></circle><circle cx="433.3333333333333" cy="95.63999999999999" r="4" fill="#4f46e5" stroke="#ffffff" stroke-width="2"><title>8192 (llama.cpp stock): 78.9</title></circle><path d="M 70 180.36 L 251.66666666666666 163.56 L 433.3333333333333 125.39999999999998 L 615 105.47999999999999 L 615 285 L 70 285 Z" fill="#059669" fill-opacity="0.08" />
+      <path d="M 70 180.36 L 251.66666666666666 163.56 L 433.3333333333333 125.39999999999998 L 615 105.47999999999999" fill="none" stroke="#059669" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+    <circle cx="70" cy="180.36" r="4" fill="#059669" stroke="#ffffff" stroke-width="2"><title>512 (Ollama (stock)): 43.6</title></circle><circle cx="251.66666666666666" cy="163.56" r="4" fill="#059669" stroke="#ffffff" stroke-width="2"><title>2048 (Ollama (stock)): 50.6</title></circle><circle cx="433.3333333333333" cy="125.39999999999998" r="4" fill="#059669" stroke="#ffffff" stroke-width="2"><title>8192 (Ollama (stock)): 66.5</title></circle><circle cx="615" cy="105.47999999999999" r="4" fill="#059669" stroke="#ffffff" stroke-width="2"><title>32768 (Ollama (stock)): 74.8</title></circle>
+  
+      <rect x="304" y="29" width="10" height="10" fill="#4f46e5" rx="2" />
+      <text x="318" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">llama.cpp stock</text>
+    
+      <rect x="464" y="29" width="10" height="10" fill="#059669" rx="2" />
+      <text x="478" y="38" font-size="14" fill="#4b5563" font-family="sans-serif">Ollama (stock)</text>
+    
+</svg>
