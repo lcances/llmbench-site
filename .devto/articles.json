@@ -4,6 +4,11 @@
     "series": "llmbench",
     "url": "https://dev.to/elcances/qwen35-27b-on-two-nvidia-geforce-rtx-5060-ti-cards-229k-tokens-of-context-1ojp"
   },
+  "qwen3-5-35b-a3b-on-two-rtx-5060-ti-16-users-at-740-tok-s": {
+    "id": 5125320,
+    "series": "llmbench",
+    "url": "https://dev.to/elcances/qwen35-35b-a3b-on-two-rtx-5060-ti-16-users-at-740-toks-3bpe"
+  },
   "qwen3-5-4b-budget-computer": {
     "id": 4949343,
     "series": "llmbench",
