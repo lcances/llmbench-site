@@ -6,6 +6,8 @@ cover: "images/cover.png"
 issue: "4ae22727-bd3a-4788-958e-3e1f2f3947be"
 date: "2026-11-25"
 series: "Qwen3.5"
+setup: "Single GPU"
+model: "qwen3.5-35b-a3b"
 ---
 
 On an NVIDIA GeForce RTX 5060 Ti, qwen3.5-35b-a3b generates 69 tokens per second from a short prompt using stock llama.cpp. It also fits a 31k-token context on that same card.

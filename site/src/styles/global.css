@@ -519,6 +519,25 @@ a:hover {
 .qtable a:hover {
   text-decoration: underline;
 }
+/* family page: model × setup, a cell is the article measured there */
+.qtable.setup-grid tbody tr {
+  border-bottom: 1px solid var(--rule);
+}
+.qtable.setup-grid th,
+.qtable.setup-grid td {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.qtable.setup-grid td {
+  white-space: normal;
+  min-width: 240px;
+}
+.qtable.setup-grid td a {
+  display: block;
+}
+.qtable.setup-grid td a + a {
+  margin-top: 8px;
+}
 .qtable-note {
   font-size: 14px;
   color: var(--muted);

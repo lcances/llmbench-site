@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { allArticles, bySetup, compareModels, setupSlug, type Article } from '../../lib/articles';
+
+export async function getStaticPaths() {
+  const setups = bySetup(await allArticles());
+  return [...setups].map(([name, list]) => ({
+    params: { setup: setupSlug(name) },
+    props: { name, list },
+  }));
+}
+
+interface Props {
+  name: string;
+  list: Article[];
+}
+
+const { name, list } = Astro.props;
+const bySize = [...list].sort((a, b) => compareModels(a.data.model, b.data.model));
+---
+
+<Base title={name} description={`Every model benchmarked on the ${name} setup.`} current="setups">
+  <div class="wrap">
+    <header class="page-head">
+      <div class="kicker">Setup</div>
+      <h1>{name}</h1>
+      <p>Every model we measured on this setup, smallest first.</p>
+    </header>
+    <ArticleList list={bySize} />
+  </div>
+</Base>

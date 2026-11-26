@@ -21,6 +21,11 @@ const articles = defineCollection({
       date: z.coerce.date().optional(),
       // Model family, e.g. "Qwen3.5" — groups articles on a family page.
       series: z.string().optional(),
+      // Hardware the article was measured on, e.g. "Single GPU" — its setup page.
+      setup: z.string().optional(),
+      // Model name from the benchmark data, e.g. "qwen3.5-9b" — pairs one model's
+      // articles across setups.
+      model: z.string().optional(),
       // Link to the reduced version on dev.to, when there is one.
       devto: z.string().url().optional(),
     }),

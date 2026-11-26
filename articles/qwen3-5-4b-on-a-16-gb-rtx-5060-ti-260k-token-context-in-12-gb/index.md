@@ -6,6 +6,8 @@ cover: "images/cover.png"
 issue: "08cb2f1d-980e-4fd8-b28a-210a0800968e"
 date: "2026-11-03"
 series: "Qwen3.5"
+setup: "Single GPU"
+model: "qwen3.5-4b"
 ---
 
 Qwen3.5-4b writes 114 tokens per second on a short prompt with stock llama.cpp on an NVIDIA GeForce RTX 5060 Ti. It also holds a 260k-token context in 12 GB of the card’s 16 GB of memory.

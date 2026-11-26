@@ -1,35 +1,95 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ArticleList from '../../components/ArticleList.astro';
-import { allArticles, byFamily, familySlug, type Article } from '../../lib/articles';
+import {
+  allArticles,
+  byFamily,
+  bySetup,
+  compareModels,
+  familySlug,
+  sameModel,
+  setupSlug,
+  type Article,
+} from '../../lib/articles';
 
 export async function getStaticPaths() {
-  const families = byFamily(await allArticles());
-  return [...families].map(([name, list]) => ({
+  const all = await allArticles();
+  const setups = [...bySetup(all).keys()];
+  return [...byFamily(all)].map(([name, list]) => ({
     params: { family: familySlug(name) },
-    props: { name, list },
+    props: { name, list, setups },
   }));
 }
 
 interface Props {
   name: string;
   list: Article[];
+  /** Every setup on the site, so a model not measured on one shows as a gap. */
+  setups: string[];
 }
 
-const { name, list } = Astro.props;
+const { name, list, setups } = Astro.props;
+// The grid needs both a model and a setup; anything else is listed below it.
+const placed = list.filter((a) => a.data.model && a.data.setup);
+const rest = list.filter((a) => !placed.includes(a));
+const models = placed
+  .map((a) => a.data.model!)
+  .filter((m, i, all) => all.findIndex((other) => sameModel(other, m)) === i)
+  .sort(compareModels);
+const cell = (model: string, setup: string) =>
+  placed.filter((a) => a.data.setup === setup && sameModel(a.data.model, model));
 ---
 
 <Base
   title={name}
-  description={`Every ${name} model benchmarked on the same consumer hardware.`}
+  description={`Every ${name} model we benchmarked, by size and hardware setup.`}
   current="families"
 >
   <div class="wrap">
     <header class="page-head">
       <div class="kicker">Family</div>
       <h1>{name}</h1>
-      <p>Every size we measured, on the same hardware and the same runtimes.</p>
+      <p>Every size we measured, on each hardware setup.</p>
     </header>
-    <ArticleList list={list} />
+    {
+      models.length > 0 && (
+        <div class="qtable-scroll">
+          <table class="qtable setup-grid">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                {setups.map((s) => (
+                  <th scope="col">
+                    <a href={`/setups/${setupSlug(s)}/`}>{s}</a>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {models.map((m) => (
+                <tr>
+                  <th scope="row" class="mono">
+                    {m}
+                  </th>
+                  {setups.map((s) => {
+                    const hits = cell(m, s);
+                    return (
+                      <td>
+                        {hits.length === 0 ? (
+                          <span class="none">—</span>
+                        ) : (
+                          hits.map((a) => <a href={`/${a.id}/`}>{a.data.title}</a>)
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+    {(rest.length > 0 || models.length === 0) && <ArticleList list={rest} />}
   </div>
 </Base>

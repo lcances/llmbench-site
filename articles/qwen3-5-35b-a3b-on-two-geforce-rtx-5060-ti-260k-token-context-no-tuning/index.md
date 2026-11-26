@@ -6,6 +6,8 @@ cover: "images/cover.png"
 issue: "d926e06f-617f-42b7-93fa-3ffcebf666cd"
 date: "2026-11-17"
 series: "Qwen3.5"
+setup: "Dual GPU"
+model: "qwen3.5-35b-a3b"
 ---
 
 On two NVIDIA GeForce RTX 5060 Ti cards, qwen3.5-35b-a3b writes 110 tokens per second from a short prompt using stock llama.cpp. It can also hold a 260k-token context.
